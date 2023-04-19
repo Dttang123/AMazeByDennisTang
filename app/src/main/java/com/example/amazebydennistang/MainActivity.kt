@@ -11,7 +11,7 @@ import android.view.Menu
 import android.view.MenuItem
 import com.example.amazebydennistang.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() { //Please commit
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
