@@ -1,0 +1,1 @@
+This is an Android project for students to create a Maze app for Android.
