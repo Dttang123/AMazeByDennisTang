@@ -12,10 +12,26 @@
         android:theme="@style/Theme.AMazeByDennisTang"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.AMazeByDennisTang.NoActionBar">
+            android:name=".WinningActivity"
+            android:exported="true" />
+        <activity
+            android:name=".LosingActivity"
+            android:exported="true" />
+        <activity
+            android:parentActivityName=".Generating"
+            android:name=".PlayManuallyActivity"
+            android:exported="true" />
+        <activity
+            android:parentActivityName=".Generating"
+            android:name=".PlayAnimationActivity"
+            android:exported="true" />
+        <activity
+            android:parentActivityName=".AMazeActivity"
+            android:name=".Generating"
+            android:exported="true" />
+        <activity
+            android:name=".AMazeActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
