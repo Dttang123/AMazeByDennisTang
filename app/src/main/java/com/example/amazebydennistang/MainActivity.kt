@@ -14,7 +14,7 @@ import com.example.amazebydennistang.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() { //Please commit
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding //Test commit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
