@@ -34,12 +34,20 @@ public class Generating extends AppCompatActivity {
     Spinner robotQualitySpinner;
     BottomNavigationView nav;
     int progress;
+    String driverSelection = "Select";
+    String qualitySelection = "Premium";
+    String EXTRA_RANDOM_NUMBER = "com.example.mazewidgetpractice.EXTRA_RANDOM_NUMBER" ;
+    String EXTRA_SKILL_LEVEL = "com.example.mazewidgetpractice.EXTRA_SKILL_LEVEL";
+    String EXTRA_ROOMS = "com.example.mazewidgetpractice.EXTRA_ROOMS" ;
+    String EXTRA_GENERATION = "com.example.mazewidgetpractice.EXTRA_GENERATION" ;
     String EXTRA_DRIVER = "com.example.mazewidgetpractice.EXTRA_DRIVER";
-    String EXTRA_ROBOTQUALITY = "com.example.mazewidgetpractice.EXTRA_ROBOT" ;
+    String EXTRA_ROBOTQUALITY = "com.example.mazewidgetpractice.EXTRA_ROBOT";
 
-    final Handler mHandler = new Handler(); //Use Handler because you cannot set the textview inside the timer
+    //Use Handler because you cannot set the textview inside the timer
     //TextView is related to the UI thread
     //Handler handles the UI related views
+    final Handler mHandler = new Handler();
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +55,11 @@ public class Generating extends AppCompatActivity {
         setContentView(R.layout.generating);
 
         //Retrieves passed parameters from AMazeActivity into Generating
-        Intent intent = getIntent();
-        String message = intent.getStringExtra("EXTRA_GENERATION");
+        intent = getIntent();
+        int seed = intent.getIntExtra(EXTRA_RANDOM_NUMBER,0);
+        int skill_level = intent.getIntExtra(EXTRA_SKILL_LEVEL,0);
+        String rooms = intent.getStringExtra(EXTRA_ROOMS);
+        String generation = intent.getStringExtra(EXTRA_GENERATION);
 
 
         //FOR BOTTOM HOME BAR
@@ -63,17 +74,15 @@ public class Generating extends AppCompatActivity {
                         Toast.makeText(Generating.this, "Home", Toast.LENGTH_SHORT).show();
                         openHome();
                 }
-
-
                 return true;
             }
         });
-
 
         //FOR TOOLBAR
         ImageView leftIcon = findViewById(R.id.left_icon);
         ImageView rightIcon = findViewById(R.id.right_icon);
         TextView title = findViewById(R.id.toolbar_title);
+        title.setText("Dennis's Lost Woods");
 
         leftIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,14 +94,12 @@ public class Generating extends AppCompatActivity {
         rightIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(Generating.this, "You clicked in right icon", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Generating.this, "You clicked the settings icon", Toast.LENGTH_SHORT).show();
             }
         });
-        title.setText("Dennis's Lost Woods");
 
 
         //FOR THE PROGRESS BAR
-
         lpi = findViewById(R.id.LinearProgressBar);
         cpi = findViewById(R.id.circularProgressBar);
         textGrowing = findViewById(R.id.GrowingText);
@@ -101,7 +108,6 @@ public class Generating extends AppCompatActivity {
         cpi.setIndeterminate(false);
 
         setProgress();
-
     }
 
     private void setProgress() {
@@ -125,12 +131,24 @@ public class Generating extends AppCompatActivity {
 
                 if (progress == 100) {
                     timer.cancel();
+
+                    if(driverSelection.equals("Manual")){
+                        openPlayManuallyActivity();
+                    }
+
+                    else if(driverSelection.equals("Wizard") || driverSelection.equals("Wall-Follower")){
+                        openPlayAnimationActivity();
+                    }
+
+                    else if(driverSelection.equals("Select")) {
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(Generating.this, "Generation is complete. Choose a driver to begin the maze.", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
                     //Uses the "runOnUiThread()" method, to run a Runnable on the main UI thread and display the toast message.
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(Generating.this, "Generation is complete. Choose a driver to begin the maze.", Toast.LENGTH_LONG).show();
-                        }
-                    });
+
                 }
             }
         };
@@ -139,30 +157,35 @@ public class Generating extends AppCompatActivity {
 
 
         //FOR DRIVER SPINNER
-
         driverSpinner = findViewById(R.id.Driver_Spinner);
         driverSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                //on selecting a spinner item, set driverSelection to that item
+                driverSelection = adapterView.getItemAtPosition(position).toString();
+
                 if (adapterView.getItemAtPosition(position).equals("Select"))
                 {
                     Toast.makeText(Generating.this, "Please select a driver", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    //on selecting a spinner item
-                    String driverSelection = adapterView.getItemAtPosition(position).toString();
                     //show selected spinner item
                     Toast.makeText(Generating.this, "Selected Item: " + driverSelection, Toast.LENGTH_SHORT).show();
 
+                    //Initially tells user to choose a driver.
+                    if(driverSelection.equals("Select")) //(adapterView.getItemAtPosition(position).equals("Manual"))
+                    {
+                        driverSelection = "Select";
+                        Toast.makeText(Generating.this, "Choose a driver.", Toast.LENGTH_SHORT).show();
+                    }
+
                     //Moves to PlayManuallyActive if Manual is selected and progress is at 100%
-                    if(adapterView.getItemAtPosition(position).equals("Manual"))
+                    if(driverSelection.equals("Manual")) //(adapterView.getItemAtPosition(position).equals("Manual"))
                     {
                         //Passes Driver information to the next activity if at 100%
                         if(progress == 100){
-                            Intent manualIntent = new Intent(Generating.this, PlayManuallyActivity.class);
-                            manualIntent.putExtra(EXTRA_DRIVER, driverSelection);
-                            startActivity(manualIntent);
+                            openPlayManuallyActivity();
                         }
                         else{
                         Toast.makeText(Generating.this, "The maze will being shortly.", Toast.LENGTH_SHORT).show();
@@ -170,14 +193,11 @@ public class Generating extends AppCompatActivity {
                     }
 
                     //Moves to PlayAnimationActivity if Wizard is selected and progress is at 100%
-                    else if(adapterView.getItemAtPosition(position).equals("Wizard"))
+                    else if(driverSelection.equals("Wizard"))
                     {
                         //Passes Driver and Quality information to the next activity if at 100%
                         if(progress == 100){
-                            Intent animationIntent = new Intent(Generating.this, PlayAnimationActivity.class);
-                            animationIntent.putExtra(EXTRA_DRIVER, driverSelection);
-                            animationIntent.putExtra(EXTRA_ROBOTQUALITY, EXTRA_ROBOTQUALITY);
-                            startActivity(animationIntent);
+                            openPlayAnimationActivity();
                         }
                         else{
                             Toast.makeText(Generating.this, "The maze will being shortly.", Toast.LENGTH_SHORT).show();
@@ -185,14 +205,11 @@ public class Generating extends AppCompatActivity {
                     }
 
                     //Moves to PlayAnimationActivity if Wall-Follower is selected and progress is at 100%
-                    else if(adapterView.getItemAtPosition(position).equals("Wall-Follower"))
+                    else if(driverSelection.equals("Wall-Follower"))
                     {
                         //Passes Driver and Quality information to the next activity if at 100%
                         if(progress == 100){
-                            Intent animationIntent = new Intent(Generating.this, PlayAnimationActivity.class);
-                            animationIntent.putExtra(EXTRA_DRIVER, driverSelection);
-                            animationIntent.putExtra(EXTRA_ROBOTQUALITY, EXTRA_ROBOTQUALITY);
-                            startActivity(animationIntent);
+                            openPlayAnimationActivity();
                         }
                         else{
                             Toast.makeText(Generating.this, "The maze will being shortly.", Toast.LENGTH_SHORT).show();
@@ -231,26 +248,9 @@ public class Generating extends AppCompatActivity {
         robotQualitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                String robotQuality = adapterView.getItemAtPosition(position).toString();
-                Toast.makeText(Generating.this, "Selected Item: " + robotQuality, Toast.LENGTH_SHORT).show();
 
-                //Sets EXTRA_ROBOTQUALITY to what is selected to pass to next activity
-                if(adapterView.getItemAtPosition(position).equals("Premium"))
-                {
-                    EXTRA_ROBOTQUALITY = "Premium";
-                }
-                else if(adapterView.getItemAtPosition(position).equals("Mediocre"))
-                {
-                    EXTRA_ROBOTQUALITY = "Mediocre";
-                }
-                else if(adapterView.getItemAtPosition(position).equals("Soso"))
-                {
-                    EXTRA_ROBOTQUALITY = "Soso";
-                }
-                else
-                {
-                    EXTRA_ROBOTQUALITY = "Shaky";
-                }
+                qualitySelection = adapterView.getItemAtPosition(position).toString();
+                Toast.makeText(Generating.this, "Selected Item: " + qualitySelection, Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -272,24 +272,22 @@ public class Generating extends AppCompatActivity {
 
     }
 
-
     public void openHome() {
         Intent homeIntent = new Intent(this, AMazeActivity.class);
         startActivity(homeIntent);
     }
 
     public void openPlayAnimationActivity() {
-        Intent playAnimationIntent = new Intent(this, PlayAnimationActivity.class);
-        startActivity(playAnimationIntent);
+
+        Intent animationIntent = new Intent(Generating.this, PlayAnimationActivity.class);
+        animationIntent.putExtra(EXTRA_DRIVER, driverSelection);
+        animationIntent.putExtra(EXTRA_ROBOTQUALITY, qualitySelection);
+        startActivity(animationIntent);
     }
 
     public void openPlayManuallyActivity() {
-        Intent playManuallyIntent = new Intent(this, PlayManuallyActivity.class);
-        startActivity(playManuallyIntent);
+        Intent manualIntent = new Intent(Generating.this, PlayManuallyActivity.class);
+        manualIntent.putExtra(EXTRA_DRIVER, driverSelection);
+        startActivity(manualIntent);
     }
-    /*
-    public void openDialog(){
-        ExampleDialog
-    }
-    */
 }

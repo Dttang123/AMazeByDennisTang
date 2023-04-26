@@ -34,24 +34,37 @@ public class PlayAnimationActivity extends AppCompatActivity {
     int EnergyRemaining = 3500;
     int path_length = 300;
     int shortest_path = 100;
+    boolean isBackClicked = false;
+    boolean isHomeButtonClicked = false;
     boolean isLosingButtonClicked = false;
     boolean isWinningButtonClicked = false;
     String noEnergy_message = "Your robot ran out of energy!";
     String crash_message = "Your robot crashed!";
+    String EXTRA_DRIVER = "com.example.mazewidgetpractice.EXTRA_DRIVER";
+    String EXTRA_ROBOTQUALITY = "com.example.mazewidgetpractice.EXTRA_ROBOT" ;
     String EXTRA_ENERGY_CONSUMPTION = "com.example.mazewidgetpractice.EXTRA_ENERGY_CONSUMPTION" ;
     String EXTRA_PATH_LENGTH = "com.example.mazewidgetpractice.EXTRA_PATH_LENGTH";
     String EXTRA_SHORTEST_PATH = "com.example.mazewidgetpractice.SHORTEST_PATH" ;
     String EXTRA_MESSAGE = "com.example.mazewidgetpractice.SHORTEST_MESSAGE" ;
 
-    final Handler mHandler = new Handler(); //Use Handler because you cannot set the textview inside the timer
+
+    //Use Handler because you cannot set the textview inside the timer
     //TextView is related to the UI thread
     //Handler handles the UI related views
+    final Handler mHandler = new Handler();
+
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playanimationactivity);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //Passed driver and robotQuality from Generating
+        intent = getIntent();
+        String driver = intent.getStringExtra(EXTRA_DRIVER);
+        String robotQuality = intent.getStringExtra(EXTRA_ROBOTQUALITY);
+
 
         //FOR BOTTOM HOME BAR
         nav = findViewById(R.id.bottomNavigationView);
@@ -63,9 +76,9 @@ public class PlayAnimationActivity extends AppCompatActivity {
                 switch (item.getItemId()){ //Possibly add more options later
                     case R.id.home:
                         Toast.makeText(PlayAnimationActivity.this, "Home", Toast.LENGTH_SHORT).show();
+                        isHomeButtonClicked = true;
                         openHome();
                 }
-
 
                 return true;
             }
@@ -75,11 +88,13 @@ public class PlayAnimationActivity extends AppCompatActivity {
         ImageView leftIcon = findViewById(R.id.left_icon);
         ImageView rightIcon = findViewById(R.id.right_icon);
         TextView title = findViewById(R.id.toolbar_title);
+        title.setText("Dennis...");
 
         leftIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(PlayAnimationActivity.this, "You clicked the back icon", Toast.LENGTH_SHORT).show();
+                isBackClicked = true;
                 openHome();
             }
         });
@@ -89,8 +104,6 @@ public class PlayAnimationActivity extends AppCompatActivity {
                 Toast.makeText(PlayAnimationActivity.this, "You clicked the settings icon", Toast.LENGTH_SHORT).show();
             }
         });
-        title.setText("Dennis...");
-
 
         //FOR SEEKBAR
         animationSpeedBar = findViewById(R.id.animation_Speed_Seekbar); //Initializes by IDs
@@ -129,6 +142,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 isWinningButtonClicked = true;
+                Toast.makeText(PlayAnimationActivity.this, "Go2Winning Button Clicked!", Toast.LENGTH_SHORT).show();
                 openWinning();
             }
         });
@@ -140,6 +154,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 isLosingButtonClicked = true;
+                Toast.makeText(PlayAnimationActivity.this, "Go2Losing Button Clicked!", Toast.LENGTH_SHORT).show();
                 openLosing();
             }
         });
@@ -172,7 +187,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
                 });
 
                 //Cancels timer so losing screen doesn't open if user moves activities before running out of energy
-                if(isLosingButtonClicked == true || isWinningButtonClicked == true){
+                if(isLosingButtonClicked == true || isWinningButtonClicked == true || isBackClicked == true || isHomeButtonClicked == true){
                     timer.cancel();
                 }
                 //Opens losing screen if energy reaches 0
@@ -193,11 +208,10 @@ public class PlayAnimationActivity extends AppCompatActivity {
 
     //Goes to winning screen with required parameters for display
     public void openWinning() {
-
         Intent winningIntent = new Intent(this, WinningActivity.class);
         winningIntent.putExtra(EXTRA_ENERGY_CONSUMPTION, 3500-EnergyRemaining);
-        winningIntent.putExtra(EXTRA_PATH_LENGTH, path_length);
         winningIntent.putExtra(EXTRA_SHORTEST_PATH, shortest_path);
+        winningIntent.putExtra(EXTRA_PATH_LENGTH, path_length);
         startActivity(winningIntent);
     }
     public void openLosing() {

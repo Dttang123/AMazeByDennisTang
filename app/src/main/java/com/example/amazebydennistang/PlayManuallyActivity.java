@@ -26,15 +26,19 @@ public class PlayManuallyActivity extends AppCompatActivity {
     Button Zoom_Out_Button;
     int path_length = 300;
     int shortest_path = 150;
+    String EXTRA_DRIVER = "com.example.mazewidgetpractice.EXTRA_DRIVER";
     String EXTRA_PATH_LENGTH = "com.example.mazewidgetpractice.EXTRA_PATH_LENGTH";
     String EXTRA_SHORTEST_PATH = "com.example.mazewidgetpractice.SHORTEST_PATH" ;
-
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playmanuallyactivity);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //Passed driver and robotQuality from Generating
+        intent = getIntent();
+        String driver = intent.getStringExtra(EXTRA_DRIVER);
 
         //FOR BOTTOM HOME BAR
         nav = findViewById(R.id.bottomNavigationView);
@@ -58,6 +62,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
         ImageView leftIcon = findViewById(R.id.left_icon);
         ImageView rightIcon = findViewById(R.id.right_icon);
         TextView title = findViewById(R.id.toolbar_title);
+        title.setText("Dennis...");
 
         leftIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +79,6 @@ public class PlayManuallyActivity extends AppCompatActivity {
             }
         });
 
-        title.setText("Dennis...");
 
         //Toggle show walls button
         ToggleButton Show_Walls_Button = findViewById(R.id.Show_Walls_Button);
@@ -124,7 +128,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
         ShortCut_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openWinning();
+                openWinning(path_length, shortest_path);
             }
         });
 
@@ -186,7 +190,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
     }
 
     //Creates intent to go to winning screen with pathlength and shortest path values passed
-    public void openWinning() {
+    public void openWinning(int path_length, int shortest_path) {
         Intent winningIntent = new Intent(this, WinningActivity.class);
         winningIntent.putExtra(EXTRA_PATH_LENGTH, path_length);
         winningIntent.putExtra(EXTRA_SHORTEST_PATH, shortest_path);

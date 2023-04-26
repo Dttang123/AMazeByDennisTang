@@ -36,8 +36,8 @@ public class AMazeActivity extends AppCompatActivity {
     String room_selection;
     int randomNumber;
 
-    //Names for passed in intent variables
-    String EXTRA_RANDOM_NUMBER = "com.example.mazewidgetpractice.EXTRA_RANDOM_NUMBER" ;
+    //Names to be passed into Generating
+    String EXTRA_SEED = "com.example.mazewidgetpractice.EXTRA_SEED" ;
     String EXTRA_SKILL_LEVEL = "com.example.mazewidgetpractice.EXTRA_SKILL_LEVEL";
     String EXTRA_ROOMS = "com.example.mazewidgetpractice.EXTRA_ROOMS" ;
     String EXTRA_GENERATION = "com.example.mazewidgetpractice.EXTRA_GENERATION" ;
@@ -68,6 +68,7 @@ public class AMazeActivity extends AppCompatActivity {
         ImageView leftIcon = findViewById(R.id.left_icon);
         ImageView rightIcon = findViewById(R.id.right_icon);
         TextView title = findViewById(R.id.toolbar_title);
+        title.setText("Dennis's Lost Woods");
 
         leftIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,7 +83,6 @@ public class AMazeActivity extends AppCompatActivity {
                 Toast.makeText(AMazeActivity.this, "You clicked settings icon", Toast.LENGTH_SHORT).show();
             }
         });
-        title.setText("Dennis's Lost Woods");
 
 
         //Explore Button, takes
@@ -214,7 +214,7 @@ public class AMazeActivity extends AppCompatActivity {
     //Opens generation activity with parameters passed in
     public void openGenerating() {
         Intent generatingIntent = new Intent(this, Generating.class);
-        generatingIntent.putExtra(EXTRA_RANDOM_NUMBER,randomNumber);
+        generatingIntent.putExtra(EXTRA_SEED,randomNumber);
         generatingIntent.putExtra(EXTRA_SKILL_LEVEL, skill_level);
         generatingIntent.putExtra(EXTRA_GENERATION, generation_selection);
         generatingIntent.putExtra(EXTRA_ROOMS, room_selection);

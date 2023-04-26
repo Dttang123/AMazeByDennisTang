@@ -5,6 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include
+        android:id="@+id/include"
+        layout="@layout/zoom_toolbar" />
 
     <Button
         android:id="@+id/go2Losing"
@@ -18,9 +21,18 @@
         app:layout_constraintTop_toBottomOf="@+id/include"
         app:layout_constraintVertical_bias="0.974" />
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/zoom_toolbar" />
+    <Button
+        android:id="@+id/go2Winning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go2Winning"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.964"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include"
+        app:layout_constraintVertical_bias="0.974" />
+
 
     <ToggleButton
         android:id="@+id/Show_Maze_Button"
@@ -73,17 +85,6 @@
         app:layout_constraintTop_toBottomOf="@+id/Pause_Robot_Button"
         app:layout_constraintVertical_bias="0.012" />
 
-    <Button
-        android:id="@+id/go2Winning"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go2Winning"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.964"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include"
-        app:layout_constraintVertical_bias="0.974" />
 
     <ImageButton
         android:id="@+id/jump"

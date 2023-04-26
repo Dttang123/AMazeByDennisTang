@@ -17,17 +17,49 @@ import com.google.android.material.navigation.NavigationBarView;
 
 public class LosingActivity extends AppCompatActivity {
 
+    TextView path_length_text, shortest_path_text, energy_consumed_text, robot_losing_text;
     BottomNavigationView nav;
     Button Play_Again_Button;
+    String EXTRA_SHORTEST_PATH = "com.example.mazewidgetpractice.SHORTEST_PATH" ;
+    String EXTRA_PATH_LENGTH = "com.example.mazewidgetpractice.EXTRA_PATH_LENGTH";
+    String EXTRA_ENERGY_CONSUMPTION = "com.example.mazewidgetpractice.EXTRA_ENERGY_CONSUMPTION" ;
+    String EXTRA_MESSAGE = "com.example.mazewidgetpractice.SHORTEST_MESSAGE" ;
+    Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.losingactivity);
 
+
+        // Parameters passed from PlayAnimation to LosingActivity
+        // Message varies depending on how the robot loses
+        // If 0 energy, then depleted energy message
+        // If > 0 energy, then crash message
+        intent = getIntent();
+        String message = intent.getStringExtra(EXTRA_MESSAGE);
+        int path_length = intent.getIntExtra(EXTRA_PATH_LENGTH, 0);
+        int shortest_path = intent.getIntExtra(EXTRA_SHORTEST_PATH, 0);
+        int energy_consumption = intent.getIntExtra(EXTRA_ENERGY_CONSUMPTION, 0);
+
+        //Initializes TextViews
+        robot_losing_text = findViewById(R.id.robot_failure_text);
+        path_length_text = findViewById(R.id.path_length_text);
+        shortest_path_text = findViewById(R.id.shortest_path_text);
+        energy_consumed_text = findViewById(R.id.total_energy_consumed);
+
+        // Sets the text passed variables to the winning screen
+        robot_losing_text.setText(message);
+        path_length_text.setText("Total Path Length: " + path_length);
+        shortest_path_text.setText("Shortest Path Length: " + shortest_path);
+        energy_consumed_text.setText("Total Energy Consumed: " + energy_consumption);
+
+
+
         //FOR TOOLBAR
         ImageView leftIcon = findViewById(R.id.left_icon);
         ImageView rightIcon = findViewById(R.id.right_icon);
         TextView title = findViewById(R.id.toolbar_title);
+        title.setText("Dennis's Lost Woods");
 
         leftIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,7 +74,7 @@ public class LosingActivity extends AppCompatActivity {
                 Toast.makeText(LosingActivity.this, "You clicked the settings icon", Toast.LENGTH_SHORT).show();
             }
         });
-        title.setText("Dennis's Lost Woods");
+
 
         //FOR BOTTOM HOME BAR
         nav = findViewById(R.id.bottomNavigationView);
