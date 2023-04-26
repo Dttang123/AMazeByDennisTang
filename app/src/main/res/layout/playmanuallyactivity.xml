@@ -6,16 +6,40 @@
     android:layout_height="match_parent"
     tools:context=".Generating">
 
+    <View
+        android:id="@+id/gray_background"
+        android:layout_width="413dp"
+        android:layout_height="800dp"
+        android:background="@android:color/black"
+        android:backgroundTint="@color/material_dynamic_neutral40"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include"
+        app:layout_constraintVertical_bias="0.0" />
+
     <include
         android:id="@+id/include"
         layout="@layout/zoom_toolbar" />
+
+    <View
+        android:id="@+id/black_rectangle"
+        android:layout_width="332dp"
+        android:layout_height="122dp"
+        android:layout_marginBottom="116dp"
+        android:background="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ToggleButton
         android:id="@+id/Show_Walls_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textOn="OFF"
         android:textOff="ON"
+        android:textOn="OFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.083"
@@ -40,8 +64,8 @@
         android:id="@+id/Show_Maze_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textOn="OFF"
         android:textOff="ON"
+        android:textOn="OFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.523"
@@ -67,8 +91,8 @@
         android:id="@+id/Show_Solution_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textOn="OFF"
         android:textOff="ON"
+        android:textOn="OFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.95"
@@ -165,6 +189,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include"
         app:layout_constraintVertical_bias="0.871" />
+
+    <ImageView
+        android:id="@+id/Red_circle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:tint="@color/design_default_color_error"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include"
+        app:srcCompat="@drawable/circle" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
