@@ -36,7 +36,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playmanuallyactivity);
 
-        //Passed driver and robotQuality from Generating
+        //Passed driver and robotQuality from Generating, used in P7
         intent = getIntent();
         String driver = intent.getStringExtra(EXTRA_DRIVER);
 
@@ -128,6 +128,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
         ShortCut_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(PlayManuallyActivity.this, "You clicked the shortcut button", Toast.LENGTH_SHORT).show();;
                 openWinning(path_length, shortest_path);
             }
         });

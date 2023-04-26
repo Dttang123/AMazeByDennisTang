@@ -34,7 +34,7 @@ public class AMazeActivity extends AppCompatActivity {
     int skill_level;
     String generation_selection;
     String room_selection;
-    int randomNumber;
+    int seed;
 
     //Names to be passed into Generating
     String EXTRA_SEED = "com.example.mazewidgetpractice.EXTRA_SEED" ;
@@ -89,10 +89,11 @@ public class AMazeActivity extends AppCompatActivity {
         Explore_Button = findViewById(R.id.Explore_Button);
         Explore_Button.setOnClickListener(new View.OnClickListener() {
             Random random = new Random();
-            int randomNumber = random.nextInt();
+            int seed = random.nextInt();
             @Override
             public void onClick(View view)
             {
+                Toast.makeText(AMazeActivity.this, "You clicked EXPLORE", Toast.LENGTH_SHORT).show();
                 openGenerating();
             }
         });
@@ -103,6 +104,7 @@ public class AMazeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
+                Toast.makeText(AMazeActivity.this, "You clicked REVISIT", Toast.LENGTH_SHORT).show();
                 openGenerating();
             }
         });
@@ -119,7 +121,6 @@ public class AMazeActivity extends AppCompatActivity {
                 myTV.setVisibility(View.VISIBLE); //Changes visibility of text only while scraping
                 myTV.setText(progress + "/100"); //Visualizes progress compared to max value
                 skill_level = progress;
-
             }
 
             @Override
@@ -127,9 +128,10 @@ public class AMazeActivity extends AppCompatActivity {
 
             }
 
+            //Shows set level in toast and log
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                Toast.makeText(AMazeActivity.this, "Selected Skill Level: " + skill_level, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -139,22 +141,8 @@ public class AMazeActivity extends AppCompatActivity {
         Gen_Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                String item = adapterView.getItemAtPosition(position).toString();
-                //String item2 = adapterView.getSelectedItem().toString();
-                Toast.makeText(AMazeActivity.this, "Selected Item: " + item, Toast.LENGTH_SHORT).show();
-
-                if(adapterView.getItemAtPosition(position).equals("DFS"))
-                {
-                    generation_selection = "DFS";
-                }
-                else if(adapterView.getItemAtPosition(position).equals("Prim's"))
-                {
-                    generation_selection = "Prim's";
-                }
-                else if(adapterView.getItemAtPosition(position).equals("Broruvka's"))
-                {
-                    generation_selection = "Broruvka's";
-                }
+                generation_selection  = adapterView.getItemAtPosition(position).toString();
+                Toast.makeText(AMazeActivity.this, "Selected Generator: " + generation_selection, Toast.LENGTH_SHORT).show();
 
             }
 
@@ -177,16 +165,15 @@ public class AMazeActivity extends AppCompatActivity {
         Room_Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                String item = adapterView.getItemAtPosition(position).toString();
-                Toast.makeText(AMazeActivity.this, "Selected Item: " + item, Toast.LENGTH_SHORT).show();
+                room_selection = adapterView.getItemAtPosition(position).toString();
 
                 if(adapterView.getItemAtPosition(position).equals("Yes"))
                 {
-                    room_selection = "Yes";
+                    Toast.makeText(AMazeActivity.this, "The maze will have rooms", Toast.LENGTH_SHORT).show();
                 }
                 else if(adapterView.getItemAtPosition(position).equals("No"))
                 {
-                    room_selection = "No";
+                    Toast.makeText(AMazeActivity.this, "The maze will not have rooms", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -214,7 +201,7 @@ public class AMazeActivity extends AppCompatActivity {
     //Opens generation activity with parameters passed in
     public void openGenerating() {
         Intent generatingIntent = new Intent(this, Generating.class);
-        generatingIntent.putExtra(EXTRA_SEED,randomNumber);
+        generatingIntent.putExtra(EXTRA_SEED, seed);
         generatingIntent.putExtra(EXTRA_SKILL_LEVEL, skill_level);
         generatingIntent.putExtra(EXTRA_GENERATION, generation_selection);
         generatingIntent.putExtra(EXTRA_ROOMS, room_selection);

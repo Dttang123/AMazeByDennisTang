@@ -35,7 +35,7 @@
 
 
     <ToggleButton
-        android:id="@+id/Show_Maze_Button"
+        android:id="@+id/Completed_Maze_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textOff="ON"
@@ -47,18 +47,18 @@
         app:layout_constraintTop_toBottomOf="@+id/include"
         app:layout_constraintVertical_bias="0.032" />
 
+
     <TextView
-        android:id="@+id/Show_Maze_Text"
+        android:id="@+id/Competed_Maze_Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show Maze"
+        android:text="Completed Maze"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.896"
+        app:layout_constraintHorizontal_bias="0.947"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Show_Maze_Button"
+        app:layout_constraintTop_toBottomOf="@+id/Completed_Maze_Button"
         app:layout_constraintVertical_bias="0.012" />
-
 
     <ToggleButton
         android:id="@+id/Pause_Robot_Button"

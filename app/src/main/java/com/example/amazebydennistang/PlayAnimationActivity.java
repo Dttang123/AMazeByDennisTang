@@ -6,10 +6,12 @@ import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +27,8 @@ import java.util.TimerTask;
 public class PlayAnimationActivity extends AppCompatActivity {
 
     BottomNavigationView nav;
+    Button Zoom_In_Button;
+    Button Zoom_Out_Button;
     Button Go2Winning_Button;
     Button Go2Losing_Button;
     LinearProgressIndicator lpi;
@@ -60,7 +64,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playanimationactivity);
 
-        //Passed driver and robotQuality from Generating
+        //Passed driver and robotQuality from Generating, used in P7
         intent = getIntent();
         String driver = intent.getStringExtra(EXTRA_DRIVER);
         String robotQuality = intent.getStringExtra(EXTRA_ROBOTQUALITY);
@@ -105,6 +109,51 @@ public class PlayAnimationActivity extends AppCompatActivity {
             }
         });
 
+        //Zoom in and out buttons
+        Zoom_In_Button = findViewById(R.id.ZoomIn_Button);
+        Zoom_In_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(PlayAnimationActivity.this, "You clicked ZOOM IN", Toast.LENGTH_SHORT).show();;
+            }
+        });
+
+        Zoom_Out_Button = findViewById(R.id.ZoomOut_Button);
+        Zoom_Out_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(PlayAnimationActivity.this, "You clicked ZOOM OUT", Toast.LENGTH_SHORT).show();;
+            }
+        });
+
+        //Toggle show walls button
+        ToggleButton Pause_Robot_Button = findViewById(R.id.Pause_Robot_Button);
+        Pause_Robot_Button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // Toggle is ON
+                    Toast.makeText(PlayAnimationActivity.this, "Robot is paused", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Toggle is OFF
+                    Toast.makeText(PlayAnimationActivity.this, "Robot is un-paused", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        //Toggle show maze button
+        ToggleButton Completed_Button = findViewById(R.id.Completed_Maze_Button);
+        Completed_Button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // Toggle is ON
+                    Toast.makeText(PlayAnimationActivity.this, "Show Completed Maze: ON", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Toggle is OFF
+                    Toast.makeText(PlayAnimationActivity.this, "Show Completed Maze: OFF", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         //FOR SEEKBAR
         animationSpeedBar = findViewById(R.id.animation_Speed_Seekbar); //Initializes by IDs
         animationSpeedTV = findViewById(R.id.animationSpeed_TV); //Initializes by IDs
@@ -132,7 +181,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                Toast.makeText(PlayAnimationActivity.this, "Robot speed changed", Toast.LENGTH_SHORT).show();
             }
         });
 

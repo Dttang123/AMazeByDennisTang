@@ -100,7 +100,7 @@ public class WinningActivity extends AppCompatActivity {
         Play_Again_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(WinningActivity.this, "Play Again button clicked!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(WinningActivity.this, "Play Again", Toast.LENGTH_SHORT).show();
                 openHome();
             }
         });

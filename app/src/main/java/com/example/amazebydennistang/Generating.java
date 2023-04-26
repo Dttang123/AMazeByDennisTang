@@ -54,7 +54,7 @@ public class Generating extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.generating);
 
-        //Retrieves passed parameters from AMazeActivity into Generating
+        //Retrieves passed parameters from AMazeActivity into Generating, used later in P7
         intent = getIntent();
         int seed = intent.getIntExtra(EXTRA_RANDOM_NUMBER,0);
         int skill_level = intent.getIntExtra(EXTRA_SKILL_LEVEL,0);
@@ -174,14 +174,14 @@ public class Generating extends AppCompatActivity {
                     Toast.makeText(Generating.this, "Selected Item: " + driverSelection, Toast.LENGTH_SHORT).show();
 
                     //Initially tells user to choose a driver.
-                    if(driverSelection.equals("Select")) //(adapterView.getItemAtPosition(position).equals("Manual"))
+                    if(driverSelection.equals("Select"))
                     {
                         driverSelection = "Select";
                         Toast.makeText(Generating.this, "Choose a driver.", Toast.LENGTH_SHORT).show();
                     }
 
                     //Moves to PlayManuallyActive if Manual is selected and progress is at 100%
-                    if(driverSelection.equals("Manual")) //(adapterView.getItemAtPosition(position).equals("Manual"))
+                    if(driverSelection.equals("Manual"))
                     {
                         //Passes Driver information to the next activity if at 100%
                         if(progress == 100){

@@ -99,6 +99,7 @@ public class LosingActivity extends AppCompatActivity {
         Play_Again_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(LosingActivity.this, "Play Again", Toast.LENGTH_SHORT).show();
                 openHome();
             }
         });
