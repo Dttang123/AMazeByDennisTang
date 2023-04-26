@@ -3,6 +3,7 @@ package com.example.amazebydennistang;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -50,6 +51,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
     String EXTRA_PATH_LENGTH = "com.example.mazewidgetpractice.EXTRA_PATH_LENGTH";
     String EXTRA_SHORTEST_PATH = "com.example.mazewidgetpractice.SHORTEST_PATH" ;
     String EXTRA_MESSAGE = "com.example.mazewidgetpractice.SHORTEST_MESSAGE" ;
+    private static final String TAG = "PlayAnimationActivity: ";
 
 
     //Use Handler because you cannot set the textview inside the timer
@@ -68,11 +70,15 @@ public class PlayAnimationActivity extends AppCompatActivity {
         intent = getIntent();
         String driver = intent.getStringExtra(EXTRA_DRIVER);
         String robotQuality = intent.getStringExtra(EXTRA_ROBOTQUALITY);
+        Log.v(TAG, "Driver: " + driver + ",  Robot Quality: " + robotQuality);
 
 
         //FOR BOTTOM HOME BAR
         nav = findViewById(R.id.bottomNavigationView);
 
+        /*
+         * If home icon is clicked, take the user to the title screen
+         */
         nav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -80,6 +86,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
                 switch (item.getItemId()){ //Possibly add more options later
                     case R.id.home:
                         Toast.makeText(PlayAnimationActivity.this, "Home", Toast.LENGTH_SHORT).show();
+                        Log.v(TAG, "Home button clicked");
                         isHomeButtonClicked = true;
                         openHome();
                 }
@@ -98,6 +105,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(PlayAnimationActivity.this, "You clicked the back icon", Toast.LENGTH_SHORT).show();
+                Log.v(TAG, "Back button clicked");
                 isBackClicked = true;
                 openHome();
             }
@@ -106,15 +114,19 @@ public class PlayAnimationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(PlayAnimationActivity.this, "You clicked the settings icon", Toast.LENGTH_SHORT).show();
+                Log.v(TAG, "Settings button clicked");
             }
         });
 
-        //Zoom in and out buttons
+        /*
+         * Zoom in and out buttons that respond to clicks with toast message
+         */
         Zoom_In_Button = findViewById(R.id.ZoomIn_Button);
         Zoom_In_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(PlayAnimationActivity.this, "You clicked ZOOM IN", Toast.LENGTH_SHORT).show();;
+                Toast.makeText(PlayAnimationActivity.this, "You clicked ZOOM IN", Toast.LENGTH_SHORT).show();
+                Log.v(TAG, "Zoom in button clicked");
             }
         });
 
@@ -122,34 +134,43 @@ public class PlayAnimationActivity extends AppCompatActivity {
         Zoom_Out_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(PlayAnimationActivity.this, "You clicked ZOOM OUT", Toast.LENGTH_SHORT).show();;
+                Toast.makeText(PlayAnimationActivity.this, "You clicked ZOOM OUT", Toast.LENGTH_SHORT).show();
+                Log.v(TAG, "Zoom out button clicked");
             }
         });
 
-        //Toggle show walls button
+        /*
+         * Toggle pause robot button that respond to clicks with toast message
+         */
         ToggleButton Pause_Robot_Button = findViewById(R.id.Pause_Robot_Button);
         Pause_Robot_Button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     // Toggle is ON
                     Toast.makeText(PlayAnimationActivity.this, "Robot is paused", Toast.LENGTH_SHORT).show();
+                    Log.v(TAG, "Robot toggled to PAUSED");
                 } else {
                     // Toggle is OFF
                     Toast.makeText(PlayAnimationActivity.this, "Robot is un-paused", Toast.LENGTH_SHORT).show();
+                    Log.v(TAG, "Robot toggled to START");
                 }
             }
         });
 
-        //Toggle show maze button
+        /*
+         * Toggle completed button that shows completed map, maze, walls, and responds to clicks with toast message
+         */
         ToggleButton Completed_Button = findViewById(R.id.Completed_Maze_Button);
         Completed_Button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     // Toggle is ON
                     Toast.makeText(PlayAnimationActivity.this, "Show Completed Maze: ON", Toast.LENGTH_SHORT).show();
+                    Log.v(TAG, "Completed Maze toggled: ON");
                 } else {
                     // Toggle is OFF
                     Toast.makeText(PlayAnimationActivity.this, "Show Completed Maze: OFF", Toast.LENGTH_SHORT).show();
+                    Log.v(TAG, "Completed Maze toggled: OFF");
                 }
             }
         });
@@ -182,6 +203,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 Toast.makeText(PlayAnimationActivity.this, "Robot speed changed", Toast.LENGTH_SHORT).show();
+                Log.v(TAG, "Robot speed changed");
             }
         });
 
@@ -192,6 +214,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 isWinningButtonClicked = true;
                 Toast.makeText(PlayAnimationActivity.this, "Go2Winning Button Clicked!", Toast.LENGTH_SHORT).show();
+                Log.v(TAG, "Go2Winning is clicked.");
                 openWinning();
             }
         });
@@ -204,6 +227,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 isLosingButtonClicked = true;
                 Toast.makeText(PlayAnimationActivity.this, "Go2Losing Button Clicked!", Toast.LENGTH_SHORT).show();
+                Log.v(TAG, "Go2Losing button is clicked.");
                 openLosing();
             }
         });
@@ -261,6 +285,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
         winningIntent.putExtra(EXTRA_ENERGY_CONSUMPTION, 3500-EnergyRemaining);
         winningIntent.putExtra(EXTRA_SHORTEST_PATH, shortest_path);
         winningIntent.putExtra(EXTRA_PATH_LENGTH, path_length);
+        Log.v(TAG, "Energy Consumed: " + (3500-EnergyRemaining) + ",  Shortest Path: " + shortest_path + ", Path Length: " + path_length);
         startActivity(winningIntent);
     }
     public void openLosing() {
@@ -271,6 +296,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
             losingIntent.putExtra(EXTRA_ENERGY_CONSUMPTION, 3500-EnergyRemaining);
             losingIntent.putExtra(EXTRA_SHORTEST_PATH, shortest_path);
             losingIntent.putExtra(EXTRA_MESSAGE, noEnergy_message);
+            Log.v(TAG, "Energy Consumed: " + (3500-EnergyRemaining) + ",  Shortest Path: " + shortest_path + ", Losing Message: " + noEnergy_message);
             startActivity(losingIntent);
         }
 
@@ -280,6 +306,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
             losingIntent.putExtra(EXTRA_ENERGY_CONSUMPTION, 3500-EnergyRemaining);
             losingIntent.putExtra(EXTRA_SHORTEST_PATH, shortest_path);
             losingIntent.putExtra(EXTRA_MESSAGE, crash_message);
+            Log.v(TAG, "Energy Consumed: " + (3500-EnergyRemaining) + ",  Shortest Path: " + shortest_path + ", Losing Message: " + crash_message);
             startActivity(losingIntent);
         }
 

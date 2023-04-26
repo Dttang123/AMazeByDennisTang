@@ -3,6 +3,7 @@ package com.example.amazebydennistang;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -42,6 +43,7 @@ public class Generating extends AppCompatActivity {
     String EXTRA_GENERATION = "com.example.mazewidgetpractice.EXTRA_GENERATION" ;
     String EXTRA_DRIVER = "com.example.mazewidgetpractice.EXTRA_DRIVER";
     String EXTRA_ROBOTQUALITY = "com.example.mazewidgetpractice.EXTRA_ROBOT";
+    private static final String TAG = "Generating: ";
 
     //Use Handler because you cannot set the textview inside the timer
     //TextView is related to the UI thread
@@ -60,11 +62,15 @@ public class Generating extends AppCompatActivity {
         int skill_level = intent.getIntExtra(EXTRA_SKILL_LEVEL,0);
         String rooms = intent.getStringExtra(EXTRA_ROOMS);
         String generation = intent.getStringExtra(EXTRA_GENERATION);
+        Log.v(TAG, "Seed: " + seed + ",  Skill Level: " + skill_level + ",  Generator: " + generation + ",  Rooms: " + rooms);
 
 
         //FOR BOTTOM HOME BAR
         nav = findViewById(R.id.bottomNavigationView);
 
+        /*
+         * If home icon is clicked, take the user to the title screen
+         */
         nav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -72,6 +78,7 @@ public class Generating extends AppCompatActivity {
                 switch (item.getItemId()) { //Possibly add more options later
                     case R.id.home:
                         Toast.makeText(Generating.this, "Home", Toast.LENGTH_SHORT).show();
+                        Log.v(TAG, "Home button is clicked.");
                         openHome();
                 }
                 return true;
@@ -88,6 +95,7 @@ public class Generating extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(Generating.this, "You clicked the back icon", Toast.LENGTH_SHORT).show();
+                Log.v(TAG, "Back button is clicked.");
                 openHome();
             }
         });
@@ -95,6 +103,7 @@ public class Generating extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(Generating.this, "You clicked the settings icon", Toast.LENGTH_SHORT).show();
+                Log.v(TAG, "Settings button is clicked.");
             }
         });
 
@@ -144,6 +153,7 @@ public class Generating extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 Toast.makeText(Generating.this, "Generation is complete. Choose a driver to begin the maze.", Toast.LENGTH_LONG).show();
+                                Log.v(TAG, "Loading is finished, waiting for user to choose a driver");
                             }
                         });
                     }
@@ -167,11 +177,13 @@ public class Generating extends AppCompatActivity {
                 if (adapterView.getItemAtPosition(position).equals("Select"))
                 {
                     Toast.makeText(Generating.this, "Please select a driver", Toast.LENGTH_SHORT).show();
+                    Log.v(TAG, "User, must select a driver");
                 }
                 else
                 {
                     //show selected spinner item
                     Toast.makeText(Generating.this, "Selected Item: " + driverSelection, Toast.LENGTH_SHORT).show();
+                    Log.v(TAG, "User selected " + driverSelection + " driver." );
 
                     //Initially tells user to choose a driver.
                     if(driverSelection.equals("Select"))
@@ -189,6 +201,7 @@ public class Generating extends AppCompatActivity {
                         }
                         else{
                         Toast.makeText(Generating.this, "The maze will being shortly.", Toast.LENGTH_SHORT).show();
+                            Log.v(TAG, "User selected " + driverSelection + " driver before maze was done. Wait for loading to finish" );
                         }
                     }
 
@@ -201,6 +214,7 @@ public class Generating extends AppCompatActivity {
                         }
                         else{
                             Toast.makeText(Generating.this, "The maze will being shortly.", Toast.LENGTH_SHORT).show();
+                            Log.v(TAG, "User selected " + driverSelection + " driver before maze was done. Wait for loading to finish" );
                         }
                     }
 
@@ -213,6 +227,7 @@ public class Generating extends AppCompatActivity {
                         }
                         else{
                             Toast.makeText(Generating.this, "The maze will being shortly.", Toast.LENGTH_SHORT).show();
+                            Log.v(TAG, "User selected " + driverSelection + " driver before maze was done. Wait for loading to finish" );
                         }
                     }
 
@@ -251,6 +266,7 @@ public class Generating extends AppCompatActivity {
 
                 qualitySelection = adapterView.getItemAtPosition(position).toString();
                 Toast.makeText(Generating.this, "Selected Item: " + qualitySelection, Toast.LENGTH_SHORT).show();
+                Log.v(TAG, "User selected " + qualitySelection + " robot quality." );
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -282,12 +298,14 @@ public class Generating extends AppCompatActivity {
         Intent animationIntent = new Intent(Generating.this, PlayAnimationActivity.class);
         animationIntent.putExtra(EXTRA_DRIVER, driverSelection);
         animationIntent.putExtra(EXTRA_ROBOTQUALITY, qualitySelection);
+        Log.v(TAG, "Driver: " + driverSelection + ",  Robot Quality: " + qualitySelection);
         startActivity(animationIntent);
     }
 
     public void openPlayManuallyActivity() {
         Intent manualIntent = new Intent(Generating.this, PlayManuallyActivity.class);
         manualIntent.putExtra(EXTRA_DRIVER, driverSelection);
+        Log.v(TAG, "Driver: " + driverSelection);
         startActivity(manualIntent);
     }
 }

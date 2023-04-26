@@ -2,6 +2,7 @@ package com.example.amazebydennistang;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +25,7 @@ public class LosingActivity extends AppCompatActivity {
     String EXTRA_PATH_LENGTH = "com.example.mazewidgetpractice.EXTRA_PATH_LENGTH";
     String EXTRA_ENERGY_CONSUMPTION = "com.example.mazewidgetpractice.EXTRA_ENERGY_CONSUMPTION" ;
     String EXTRA_MESSAGE = "com.example.mazewidgetpractice.SHORTEST_MESSAGE" ;
+    private static final String TAG = "LosingActivity: ";
     Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class LosingActivity extends AppCompatActivity {
         int path_length = intent.getIntExtra(EXTRA_PATH_LENGTH, 0);
         int shortest_path = intent.getIntExtra(EXTRA_SHORTEST_PATH, 0);
         int energy_consumption = intent.getIntExtra(EXTRA_ENERGY_CONSUMPTION, 0);
+        Log.v(TAG, "Shortest Path: " + shortest_path + ", Path Length: " + path_length + ", Energy Consumption: " + energy_consumption);
 
         //Initializes TextViews
         robot_losing_text = findViewById(R.id.robot_failure_text);
@@ -65,6 +68,7 @@ public class LosingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(LosingActivity.this, "You clicked the back icon", Toast.LENGTH_SHORT).show();
+                Log.v(TAG, "Back button is clicked.");
                 openHome();
             }
         });
@@ -72,6 +76,7 @@ public class LosingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(LosingActivity.this, "You clicked the settings icon", Toast.LENGTH_SHORT).show();
+                Log.v(TAG, "Settings button is clicked.");
             }
         });
 
@@ -79,6 +84,9 @@ public class LosingActivity extends AppCompatActivity {
         //FOR BOTTOM HOME BAR
         nav = findViewById(R.id.bottomNavigationView);
 
+        /*
+         * If home icon is clicked, take the user to the title screen
+         */
         nav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -86,6 +94,7 @@ public class LosingActivity extends AppCompatActivity {
                 switch (item.getItemId()){ //Possibly add more options later
                     case R.id.home:
                         Toast.makeText(LosingActivity.this, "Home", Toast.LENGTH_SHORT).show();
+                        Log.v(TAG, "Home button is clicked.");
                         openHome();
                 }
 
@@ -100,6 +109,7 @@ public class LosingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(LosingActivity.this, "Play Again", Toast.LENGTH_SHORT).show();
+                Log.v(TAG, "Play Again button is clicked.");
                 openHome();
             }
         });
@@ -107,7 +117,7 @@ public class LosingActivity extends AppCompatActivity {
     }
 
     public void openHome() {
-        Intent intent1 = new Intent(this, AMazeActivity.class);
-        startActivity(intent1);
+        Intent homeIntent = new Intent(this, AMazeActivity.class);
+        startActivity(homeIntent);
     }
 }

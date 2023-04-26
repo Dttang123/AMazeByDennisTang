@@ -2,6 +2,7 @@ package com.example.amazebydennistang;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +24,7 @@ public class WinningActivity extends AppCompatActivity {
     String EXTRA_ENERGY_CONSUMPTION = "com.example.mazewidgetpractice.EXTRA_ENERGY_CONSUMPTION" ;
     String EXTRA_PATH_LENGTH = "com.example.mazewidgetpractice.EXTRA_PATH_LENGTH";
     String EXTRA_SHORTEST_PATH = "com.example.mazewidgetpractice.SHORTEST_PATH" ;
+    private static final String TAG = "WinningActivity: ";
     Intent intent;
 
     @Override
@@ -32,12 +34,16 @@ public class WinningActivity extends AppCompatActivity {
 
         intent = getIntent();
 
+
         // For manual maze win
         int path_length = intent.getIntExtra(EXTRA_PATH_LENGTH, 0);
         int shortest_path = intent.getIntExtra(EXTRA_SHORTEST_PATH, 0);
 
         // Additionally for automatic maze win
         int energy_consumption = intent.getIntExtra(EXTRA_ENERGY_CONSUMPTION, 0);
+
+        // Log cat to check variables were correctly passed
+        Log.v(TAG, "Shortest Path: " + shortest_path + ", Path Length: " + path_length);
 
         path_length_text = findViewById(R.id.path_length_text);
         shortest_path_text = findViewById(R.id.shortest_path_text);
@@ -69,6 +75,7 @@ public class WinningActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(WinningActivity.this, "You clicked the back icon", Toast.LENGTH_SHORT).show();
+                Log.v(TAG, "Back button is clicked");
                 openHome();
             }
         });
@@ -76,12 +83,17 @@ public class WinningActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(WinningActivity.this, "You clicked in settings icon", Toast.LENGTH_SHORT).show();
+                Log.v(TAG, "Settings button is clicked");
             }
         });
 
 
         //FOR BOTTOM HOME BAR
         nav = findViewById(R.id.bottomNavigationView);
+
+        /*
+         * If home icon is clicked, take the user to the title screen
+         */
         nav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -89,18 +101,22 @@ public class WinningActivity extends AppCompatActivity {
                 switch (item.getItemId()){ //Possibly add more options later
                     case R.id.home:
                         Toast.makeText(WinningActivity.this, "Home", Toast.LENGTH_SHORT).show();
+                        Log.v(TAG, "Home button is clicked");
                         openHome();
                 }
                 return true;
             }
         });
 
-        //Play Again button sends user back to title
+        /*
+         * Play Again button sends user back to title
+         */
         Play_Again_Button = findViewById(R.id.Play_Again_Button);
         Play_Again_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(WinningActivity.this, "Play Again", Toast.LENGTH_SHORT).show();
+                Log.v(TAG, "Play Again Button is clicked");
                 openHome();
             }
         });
