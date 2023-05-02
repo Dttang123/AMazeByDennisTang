@@ -5,30 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <View
-        android:id="@+id/gray_background2"
-        android:layout_width="413dp"
-        android:layout_height="800dp"
-        android:background="@android:color/black"
-        android:backgroundTint="@color/material_dynamic_neutral40"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include"
-        app:layout_constraintVertical_bias="0.0" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/zoom_toolbar" />
 
-    <View
-        android:id="@+id/black_rectangle3"
-        android:layout_width="332dp"
-        android:layout_height="122dp"
-        android:background="@android:color/black"
+    <com.example.amazebydennistang.MazePanel
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include"
-        app:layout_constraintVertical_bias="0.738" />
+        app:layout_constraintVertical_bias="0.381" />
 
     <ImageButton
         android:id="@+id/BackSensor"
@@ -44,10 +33,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include"
         app:layout_constraintVertical_bias="0.745" />
-
-    <include
-        android:id="@+id/include"
-        layout="@layout/zoom_toolbar" />
 
     <Button
         android:id="@+id/go2Losing"
@@ -245,31 +230,6 @@
         app:layout_constraintTop_toBottomOf="@+id/Animation_Speed_Text"
         app:layout_constraintVertical_bias="0.034" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:tint="#4CAF50"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.257"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/gray_background2"
-        app:layout_constraintVertical_bias="0.375"
-        app:srcCompat="@drawable/wall_polygons" />
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:tint="#FFEB3B"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.71"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/gray_background2"
-        app:layout_constraintVertical_bias="0.375"
-        app:srcCompat="@drawable/wall_polygon2" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

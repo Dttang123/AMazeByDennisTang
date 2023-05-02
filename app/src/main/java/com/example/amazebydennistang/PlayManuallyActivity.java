@@ -27,6 +27,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
     Button Zoom_Out_Button;
     int path_length = 0;
     int shortest_path = 150;
+    MazePanel mazePanel;
     String EXTRA_DRIVER = "com.example.mazewidgetpractice.EXTRA_DRIVER";
     String EXTRA_PATH_LENGTH = "com.example.mazewidgetpractice.EXTRA_PATH_LENGTH";
     String EXTRA_SHORTEST_PATH = "com.example.mazewidgetpractice.SHORTEST_PATH" ;
@@ -37,6 +38,9 @@ public class PlayManuallyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playmanuallyactivity);
+
+        //Shows custom view
+        mazePanel = findViewById(R.id.mazePanel);
 
         //Passed driver and robotQuality from Generating, used in P7
         intent = getIntent();
