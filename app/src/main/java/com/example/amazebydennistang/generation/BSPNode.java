@@ -3,6 +3,8 @@
  */
 package com.example.amazebydennistang.generation;
 
+import com.example.amazebydennistang.gui.MazeFileWriter;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

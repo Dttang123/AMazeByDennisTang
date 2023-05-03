@@ -30,7 +30,7 @@ import com.example.amazebydennistang.generation.Maze;
 import com.example.amazebydennistang.generation.Order;
 
 
-public class Generating extends AppCompatActivity implements Order {
+public class GeneratingActivity extends AppCompatActivity implements Order {
 
     LinearProgressIndicator lpi;
     CircularProgressIndicator cpi;
@@ -81,7 +81,7 @@ public class Generating extends AppCompatActivity implements Order {
 
                 switch (item.getItemId()) { //Possibly add more options later
                     case R.id.home:
-                        Toast.makeText(Generating.this, "Home", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GeneratingActivity.this, "Home", Toast.LENGTH_SHORT).show();
                         Log.v(TAG, "Home button is clicked.");
                         openHome();
                 }
@@ -98,7 +98,7 @@ public class Generating extends AppCompatActivity implements Order {
         leftIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(Generating.this, "You clicked the back icon", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GeneratingActivity.this, "You clicked the back icon", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Back button is clicked.");
                 openHome();
             }
@@ -106,7 +106,7 @@ public class Generating extends AppCompatActivity implements Order {
         rightIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(Generating.this, "You clicked the settings icon", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GeneratingActivity.this, "You clicked the settings icon", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Settings button is clicked.");
             }
         });
@@ -156,7 +156,7 @@ public class Generating extends AppCompatActivity implements Order {
                     else if(driverSelection.equals("Select")) {
                         runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(Generating.this, "Generation is complete. Choose a driver to begin the maze.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(GeneratingActivity.this, "Generation is complete. Choose a driver to begin the maze.", Toast.LENGTH_LONG).show();
                                 Log.v(TAG, "Loading is finished, waiting for user to choose a driver");
                             }
                         });
@@ -180,20 +180,20 @@ public class Generating extends AppCompatActivity implements Order {
 
                 if (adapterView.getItemAtPosition(position).equals("Select"))
                 {
-                    Toast.makeText(Generating.this, "Please select a driver", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GeneratingActivity.this, "Please select a driver", Toast.LENGTH_SHORT).show();
                     Log.v(TAG, "User, must select a driver");
                 }
                 else
                 {
                     //show selected spinner item
-                    Toast.makeText(Generating.this, "Selected Item: " + driverSelection, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GeneratingActivity.this, "Selected Item: " + driverSelection, Toast.LENGTH_SHORT).show();
                     Log.v(TAG, "User selected " + driverSelection + " driver." );
 
                     //Initially tells user to choose a driver.
                     if(driverSelection.equals("Select"))
                     {
                         driverSelection = "Select";
-                        Toast.makeText(Generating.this, "Choose a driver.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GeneratingActivity.this, "Choose a driver.", Toast.LENGTH_SHORT).show();
                     }
 
                     //Moves to PlayManuallyActive if Manual is selected and progress is at 100%
@@ -204,7 +204,7 @@ public class Generating extends AppCompatActivity implements Order {
                             openPlayManuallyActivity();
                         }
                         else{
-                        Toast.makeText(Generating.this, "The maze will being shortly.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GeneratingActivity.this, "The maze will being shortly.", Toast.LENGTH_SHORT).show();
                             Log.v(TAG, "User selected " + driverSelection + " driver before maze was done. Wait for loading to finish" );
                         }
                     }
@@ -217,7 +217,7 @@ public class Generating extends AppCompatActivity implements Order {
                             openPlayAnimationActivity();
                         }
                         else{
-                            Toast.makeText(Generating.this, "The maze will being shortly.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GeneratingActivity.this, "The maze will being shortly.", Toast.LENGTH_SHORT).show();
                             Log.v(TAG, "User selected " + driverSelection + " driver before maze was done. Wait for loading to finish" );
                         }
                     }
@@ -230,7 +230,7 @@ public class Generating extends AppCompatActivity implements Order {
                             openPlayAnimationActivity();
                         }
                         else{
-                            Toast.makeText(Generating.this, "The maze will being shortly.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GeneratingActivity.this, "The maze will being shortly.", Toast.LENGTH_SHORT).show();
                             Log.v(TAG, "User selected " + driverSelection + " driver before maze was done. Wait for loading to finish" );
                         }
                     }
@@ -269,7 +269,7 @@ public class Generating extends AppCompatActivity implements Order {
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
 
                 qualitySelection = adapterView.getItemAtPosition(position).toString();
-                Toast.makeText(Generating.this, "Selected Item: " + qualitySelection, Toast.LENGTH_SHORT).show();
+                Toast.makeText(GeneratingActivity.this, "Selected Item: " + qualitySelection, Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "User selected " + qualitySelection + " robot quality." );
             }
             @Override
@@ -299,7 +299,7 @@ public class Generating extends AppCompatActivity implements Order {
 
     public void openPlayAnimationActivity() {
 
-        Intent animationIntent = new Intent(Generating.this, PlayAnimationActivity.class);
+        Intent animationIntent = new Intent(GeneratingActivity.this, PlayAnimationActivity.class);
         animationIntent.putExtra(EXTRA_DRIVER, driverSelection);
         animationIntent.putExtra(EXTRA_ROBOTQUALITY, qualitySelection);
         Log.v(TAG, "Driver: " + driverSelection + ",  Robot Quality: " + qualitySelection);
@@ -307,7 +307,7 @@ public class Generating extends AppCompatActivity implements Order {
     }
 
     public void openPlayManuallyActivity() {
-        Intent manualIntent = new Intent(Generating.this, PlayManuallyActivity.class);
+        Intent manualIntent = new Intent(GeneratingActivity.this, PlayManuallyActivity.class);
         manualIntent.putExtra(EXTRA_DRIVER, driverSelection);
         Log.v(TAG, "Driver: " + driverSelection);
         startActivity(manualIntent);

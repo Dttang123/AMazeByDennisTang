@@ -26,17 +26,17 @@ import java.util.Random;
 
 public class AMazeActivity extends AppCompatActivity {
 
-    SeekBar seekBar;
-    TextView myTV;
-    Spinner Gen_Spinner;
-    Spinner Room_Spinner;
-    Button Explore_Button;
-    Button Revisit_Button;
-    BottomNavigationView nav;
-    int skill_level;
-    int seed;
-    String generation_selection;
-    String room_selection;
+    private SeekBar seekBar;
+    private TextView myTV;
+    private Spinner Gen_Spinner;
+    private Spinner Room_Spinner;
+    private Button Explore_Button;
+    private Button Revisit_Button;
+    private BottomNavigationView nav;
+    private int skill_level;
+    private int seed;
+    private String generation_selection;
+    private String room_selection;
 
     //Names to be passed into Generating
     String EXTRA_SEED = "com.example.mazewidgetpractice.EXTRA_SEED" ;
@@ -218,7 +218,7 @@ public class AMazeActivity extends AppCompatActivity {
 
     //Opens generation activity with parameters passed in
     public void openGenerating() {
-        Intent generatingIntent = new Intent(this, Generating.class);
+        Intent generatingIntent = new Intent(this, GeneratingActivity.class);
         generatingIntent.putExtra(EXTRA_SEED, seed);
         generatingIntent.putExtra(EXTRA_SKILL_LEVEL, skill_level);
         generatingIntent.putExtra(EXTRA_GENERATION, generation_selection);
