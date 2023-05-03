@@ -1,10 +1,9 @@
 package com.example.amazebydennistang.generation;
 
+import com.example.amazebydennistang.gui.Constants;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.example.amazebydennistang.gui.Constants;
 
 /**
  * This class creates a list of walls for a floorplan.

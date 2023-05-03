@@ -3,10 +3,9 @@
  */
 package com.example.amazebydennistang.generation;
 
+import com.example.amazebydennistang.gui.Constants;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.example.amazebydennistang.gui.Constants;
 
 /**
  * DefaultOrder provides a basic implementation for an order to 

@@ -1,12 +1,12 @@
 package com.example.amazebydennistang.generation;
 
+import com.example.amazebydennistang.gui.MazeFileWriter;
+
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import com.example.amazebydennistang.gui.MazeFileWriter;
 
 /**
  * A wall is a continuous sequence of wallboards in the maze.

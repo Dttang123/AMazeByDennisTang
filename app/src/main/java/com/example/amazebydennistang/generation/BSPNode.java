@@ -6,8 +6,6 @@ package com.example.amazebydennistang.generation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.example.amazebydennistang.gui.MazeFileWriter;
-
 /**
  * BSPNodes are used to build a binary tree, where internal nodes keep track 
  * of lower and upper bounds of (x,y) coordinates.

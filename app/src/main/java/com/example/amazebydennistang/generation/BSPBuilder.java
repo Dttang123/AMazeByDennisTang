@@ -1,10 +1,9 @@
 package com.example.amazebydennistang.generation;
 
+import com.example.amazebydennistang.gui.Constants;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-
-import com.example.amazebydennistang.gui.Constants;
 
 /**
  * This class has the responsibility to obtain the tree of BSP nodes for a given maze.

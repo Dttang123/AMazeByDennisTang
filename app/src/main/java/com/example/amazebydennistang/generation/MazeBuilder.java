@@ -1,8 +1,7 @@
 package com.example.amazebydennistang.generation;
 
-import java.util.logging.Logger;
-
 import com.example.amazebydennistang.gui.Constants;
+import java.util.logging.Logger;
 
 
 /**

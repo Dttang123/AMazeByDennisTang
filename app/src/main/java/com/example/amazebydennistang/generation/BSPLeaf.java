@@ -3,13 +3,12 @@
  */
 package com.example.amazebydennistang.generation;
 
+import com.example.amazebydennistang.gui.MazeFileWriter;
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import com.example.amazebydennistang.gui.MazeFileWriter;
 
 /**
  * A leaf node for a tree of BSPNodes. It carries a list of walls. 
