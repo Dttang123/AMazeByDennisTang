@@ -1,4 +1,4 @@
-package com.example.amazebydennistang;
+package com.example.amazebydennistang.gui;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,10 +8,9 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.drawable.shapes.OvalShape;
-import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
+
 public class MazePanel extends View implements P7PanelS23 {
 
     private Canvas canvasNoteTaker;

@@ -1,4 +1,4 @@
-package com.example.amazebydennistang;
+package com.example.amazebydennistang.gui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,48 +13,56 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.amazebydennistang.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-public class LosingActivity extends AppCompatActivity {
+public class WinningActivity extends AppCompatActivity {
 
-    TextView path_length_text, shortest_path_text, energy_consumed_text, robot_losing_text;
+    TextView path_length_text, shortest_path_text, energy_consumed_text;
     BottomNavigationView nav;
     Button Play_Again_Button;
-    String EXTRA_SHORTEST_PATH = "com.example.mazewidgetpractice.SHORTEST_PATH" ;
-    String EXTRA_PATH_LENGTH = "com.example.mazewidgetpractice.EXTRA_PATH_LENGTH";
     String EXTRA_ENERGY_CONSUMPTION = "com.example.mazewidgetpractice.EXTRA_ENERGY_CONSUMPTION" ;
-    String EXTRA_MESSAGE = "com.example.mazewidgetpractice.SHORTEST_MESSAGE" ;
-    private static final String TAG = "LosingActivity: ";
+    String EXTRA_PATH_LENGTH = "com.example.mazewidgetpractice.EXTRA_PATH_LENGTH";
+    String EXTRA_SHORTEST_PATH = "com.example.mazewidgetpractice.SHORTEST_PATH" ;
+    private static final String TAG = "WinningActivity: ";
     Intent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.losingactivity);
+        setContentView(R.layout.winningactivity);
 
-
-        // Parameters passed from PlayAnimation to LosingActivity
-        // Message varies depending on how the robot loses
-        // If 0 energy, then depleted energy message
-        // If > 0 energy, then crash message
         intent = getIntent();
-        String message = intent.getStringExtra(EXTRA_MESSAGE);
+
+
+        // For manual maze win
         int path_length = intent.getIntExtra(EXTRA_PATH_LENGTH, 0);
         int shortest_path = intent.getIntExtra(EXTRA_SHORTEST_PATH, 0);
-        int energy_consumption = intent.getIntExtra(EXTRA_ENERGY_CONSUMPTION, 0);
-        Log.v(TAG, "Shortest Path: " + shortest_path + ", Path Length: " + path_length + ", Energy Consumption: " + energy_consumption);
 
-        //Initializes TextViews
-        robot_losing_text = findViewById(R.id.robot_failure_text);
+        // Additionally for automatic maze win
+        int energy_consumption = intent.getIntExtra(EXTRA_ENERGY_CONSUMPTION, 0);
+
+        // Log cat to check variables were correctly passed
+        Log.v(TAG, "Shortest Path: " + shortest_path + ", Path Length: " + path_length);
+
         path_length_text = findViewById(R.id.path_length_text);
         shortest_path_text = findViewById(R.id.shortest_path_text);
         energy_consumed_text = findViewById(R.id.total_energy_consumed);
 
         // Sets the text passed variables to the winning screen
-        robot_losing_text.setText(message);
         path_length_text.setText("Total Path Length: " + path_length);
         shortest_path_text.setText("Shortest Path Length: " + shortest_path);
-        energy_consumed_text.setText("Total Energy Consumed: " + energy_consumption);
+
+        // Sets visibility of text depending on if winning screen was reached from manual or animation
+        // Manual: energy_consumption = 0
+        if (energy_consumption != 0){
+            energy_consumed_text.setText("Total Energy Consumed: " + energy_consumption);
+        }
+        else if (energy_consumption == 0){
+            energy_consumed_text.setVisibility(View.INVISIBLE);
+        }
+
 
 
 
@@ -67,16 +75,16 @@ public class LosingActivity extends AppCompatActivity {
         leftIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(LosingActivity.this, "You clicked the back icon", Toast.LENGTH_SHORT).show();
-                Log.v(TAG, "Back button is clicked.");
+                Toast.makeText(WinningActivity.this, "You clicked the back icon", Toast.LENGTH_SHORT).show();
+                Log.v(TAG, "Back button is clicked");
                 openHome();
             }
         });
         rightIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(LosingActivity.this, "You clicked the settings icon", Toast.LENGTH_SHORT).show();
-                Log.v(TAG, "Settings button is clicked.");
+                Toast.makeText(WinningActivity.this, "You clicked in settings icon", Toast.LENGTH_SHORT).show();
+                Log.v(TAG, "Settings button is clicked");
             }
         });
 
@@ -93,29 +101,30 @@ public class LosingActivity extends AppCompatActivity {
 
                 switch (item.getItemId()){ //Possibly add more options later
                     case R.id.home:
-                        Toast.makeText(LosingActivity.this, "Home", Toast.LENGTH_SHORT).show();
-                        Log.v(TAG, "Home button is clicked.");
+                        Toast.makeText(WinningActivity.this, "Home", Toast.LENGTH_SHORT).show();
+                        Log.v(TAG, "Home button is clicked");
                         openHome();
                 }
-
                 return true;
             }
         });
 
-
-        //Play Again button sends user back to title
+        /*
+         * Play Again button sends user back to title
+         */
         Play_Again_Button = findViewById(R.id.Play_Again_Button);
         Play_Again_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(LosingActivity.this, "Play Again", Toast.LENGTH_SHORT).show();
-                Log.v(TAG, "Play Again button is clicked.");
+                Toast.makeText(WinningActivity.this, "Play Again", Toast.LENGTH_SHORT).show();
+                Log.v(TAG, "Play Again Button is clicked");
                 openHome();
             }
         });
 
-    }
 
+
+    }
     public void openHome() {
         Intent homeIntent = new Intent(this, AMazeActivity.class);
         startActivity(homeIntent);

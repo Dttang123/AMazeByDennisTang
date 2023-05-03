@@ -1,4 +1,4 @@
-package com.example.amazebydennistang;
+package com.example.amazebydennistang.gui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.amazebydennistang.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
@@ -25,8 +26,11 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.example.amazebydennistang.generation.Maze;
+import com.example.amazebydennistang.generation.Order;
 
-public class Generating extends AppCompatActivity {
+
+public class Generating extends AppCompatActivity implements Order {
 
     LinearProgressIndicator lpi;
     CircularProgressIndicator cpi;
@@ -307,5 +311,35 @@ public class Generating extends AppCompatActivity {
         manualIntent.putExtra(EXTRA_DRIVER, driverSelection);
         Log.v(TAG, "Driver: " + driverSelection);
         startActivity(manualIntent);
+    }
+
+    @Override
+    public int getSkillLevel() {
+        return 0;
+    }
+
+    @Override
+    public Builder getBuilder() {
+        return null;
+    }
+
+    @Override
+    public boolean isPerfect() {
+        return false;
+    }
+
+    @Override
+    public int getSeed() {
+        return 0;
+    }
+
+    @Override
+    public void deliver(Maze mazeConfig) {
+
+    }
+
+    @Override
+    public void updateProgress(int percentage) {
+
     }
 }

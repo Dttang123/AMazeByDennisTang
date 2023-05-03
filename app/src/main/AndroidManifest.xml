@@ -12,28 +12,28 @@
         android:theme="@style/Theme.AMazeByDennisTang"
         tools:targetApi="31">
         <activity
-            android:name=".MazePanel"
+            android:name=".gui.MazePanel"
             android:exported="true" />
         <activity
-            android:name=".WinningActivity"
+            android:name=".gui.WinningActivity"
             android:exported="true" />
         <activity
-            android:name=".LosingActivity"
+            android:name=".gui.LosingActivity"
             android:exported="true" />
         <activity
-            android:parentActivityName=".Generating"
-            android:name=".PlayManuallyActivity"
+            android:parentActivityName=".gui.Generating"
+            android:name=".gui.PlayManuallyActivity"
             android:exported="true" />
         <activity
-            android:parentActivityName=".Generating"
-            android:name=".PlayAnimationActivity"
+            android:parentActivityName=".gui.Generating"
+            android:name=".gui.PlayAnimationActivity"
             android:exported="true"/>
         <activity
-            android:parentActivityName=".AMazeActivity"
-            android:name=".Generating"
+            android:parentActivityName=".gui.AMazeActivity"
+            android:name=".gui.Generating"
             android:exported="true" />
         <activity
-            android:name=".AMazeActivity"
+            android:name=".gui.AMazeActivity"
             android:exported="true">
 
             <intent-filter>

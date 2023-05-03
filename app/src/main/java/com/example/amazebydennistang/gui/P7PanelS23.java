@@ -1,4 +1,4 @@
-package com.example.amazebydennistang;
+package com.example.amazebydennistang.gui;
 
 /**
  * Provides an adapter for a graphics object for the first person view
