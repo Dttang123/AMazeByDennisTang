@@ -1,6 +1,7 @@
 package com.example.amazebydennistang.gui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -28,45 +29,61 @@ import java.util.TimerTask;
 
 import com.example.amazebydennistang.generation.Maze;
 import com.example.amazebydennistang.generation.Order;
+import com.example.amazebydennistang.generation.DefaultOrder;
+import com.example.amazebydennistang.generation.MazeFactory;
+import com.example.amazebydennistang.generation.Factory;
 
 
 public class GeneratingActivity extends AppCompatActivity implements Order {
 
-    LinearProgressIndicator lpi;
-    CircularProgressIndicator cpi;
-    TextView textGrowing;
-    Spinner driverSpinner;
-    Spinner robotQualitySpinner;
-    BottomNavigationView nav;
-    int progress;
-    String driverSelection = "Select";
-    String qualitySelection = "Premium";
-    String EXTRA_RANDOM_NUMBER = "com.example.mazewidgetpractice.EXTRA_RANDOM_NUMBER" ;
-    String EXTRA_SKILL_LEVEL = "com.example.mazewidgetpractice.EXTRA_SKILL_LEVEL";
-    String EXTRA_ROOMS = "com.example.mazewidgetpractice.EXTRA_ROOMS" ;
-    String EXTRA_GENERATION = "com.example.mazewidgetpractice.EXTRA_GENERATION" ;
-    String EXTRA_DRIVER = "com.example.mazewidgetpractice.EXTRA_DRIVER";
-    String EXTRA_ROBOTQUALITY = "com.example.mazewidgetpractice.EXTRA_ROBOT";
+    private LinearProgressIndicator lpi;
+    private CircularProgressIndicator cpi;
+    private TextView textGrowing;
+    private Spinner driverSpinner;
+    private Spinner robotQualitySpinner;
+    private BottomNavigationView nav;
+    private int progress;
+    private String driverSelection;
+    private String qualitySelection;
+    private int seed;
+    private int skill_level;
+    private String generation;
+    private String rooms;
+    private Thread mazeGenerationThread;
+
+    private String EXTRA_SEED = "com.example.mazewidgetpractice.EXTRA_SEED";
+    private String EXTRA_SKILL_LEVEL = "com.example.mazewidgetpractice.EXTRA_SKILL_LEVEL";
+    private String EXTRA_ROOMS = "com.example.mazewidgetpractice.EXTRA_ROOMS";
+    private String EXTRA_GENERATION = "com.example.mazewidgetpractice.EXTRA_GENERATION";
+    private String EXTRA_DRIVER = "com.example.mazewidgetpractice.EXTRA_DRIVER";
+    private String EXTRA_ROBOTQUALITY = "com.example.mazewidgetpractice.EXTRA_ROBOT";
     private static final String TAG = "Generating: ";
 
-    //Use Handler because you cannot set the textview inside the timer
-    //TextView is related to the UI thread
-    //Handler handles the UI related views
     final Handler mHandler = new Handler();
-    Intent intent;
+
+    //Maze Variables
+    SharedPreferences sharedPreferences;
+    private DefaultOrder defaultOrder;
+    private MazeFactory mazeFactory;
+    private Maze maze;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.generating);
 
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        mazeFactory = new MazeFactory();
+
         //Retrieves passed parameters from AMazeActivity into Generating, used later in P7
-        intent = getIntent();
-        int seed = intent.getIntExtra(EXTRA_RANDOM_NUMBER,0);
-        int skill_level = intent.getIntExtra(EXTRA_SKILL_LEVEL,0);
-        String rooms = intent.getStringExtra(EXTRA_ROOMS);
-        String generation = intent.getStringExtra(EXTRA_GENERATION);
-        Log.v(TAG, "Seed: " + seed + ",  Skill Level: " + skill_level + ",  Generator: " + generation + ",  Rooms: " + rooms);
+        if (bundle != null) {
+            seed = intent.getIntExtra(EXTRA_SEED, 0);
+            skill_level = intent.getIntExtra(EXTRA_SKILL_LEVEL, 0);
+            rooms = intent.getStringExtra(EXTRA_ROOMS);
+            generation = intent.getStringExtra(EXTRA_GENERATION);
+            Log.v(TAG, "Seed: " + seed + ",  Skill Level: " + skill_level + ",  Generator: " + generation + ",  Rooms: " + rooms);
+        }
 
 
         //FOR BOTTOM HOME BAR
@@ -111,131 +128,61 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
             }
         });
 
-
-        //FOR THE PROGRESS BAR
-        lpi = findViewById(R.id.LinearProgressBar);
-        cpi = findViewById(R.id.circularProgressBar);
-        textGrowing = findViewById(R.id.GrowingText);
-
-        lpi.setIndeterminate(false);
-        cpi.setIndeterminate(false);
-
-        setProgress();
-    }
-
-    private void setProgress() {
-
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-
-            @Override
-            public void run() {
-                progress = progress + 1;
-
-                lpi.setProgressCompat(progress, true);
-                cpi.setProgressCompat(progress, true);
-
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        textGrowing.setText("Growing Trees... " + progress + "%");
-                    }
-                });
-
-                if (progress == 100) {
-                    timer.cancel();
-
-                    if(driverSelection.equals("Manual")){
-                        openPlayManuallyActivity();
-                    }
-
-                    else if(driverSelection.equals("Wizard") || driverSelection.equals("Wall-Follower")){
-                        openPlayAnimationActivity();
-                    }
-
-                    else if(driverSelection.equals("Select")) {
-                        runOnUiThread(new Runnable() {
-                            public void run() {
-                                Toast.makeText(GeneratingActivity.this, "Generation is complete. Choose a driver to begin the maze.", Toast.LENGTH_LONG).show();
-                                Log.v(TAG, "Loading is finished, waiting for user to choose a driver");
-                            }
-                        });
-                    }
-                    //Uses the "runOnUiThread()" method, to run a Runnable on the main UI thread and display the toast message.
-
-                }
-            }
-        };
-
-        timer.schedule(task, 10, 100);
-
-
         //FOR DRIVER SPINNER
         driverSpinner = findViewById(R.id.Driver_Spinner);
+        driverSelection = "Select";
         driverSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 //on selecting a spinner item, set driverSelection to that item
                 driverSelection = adapterView.getItemAtPosition(position).toString();
 
-                if (adapterView.getItemAtPosition(position).equals("Select"))
-                {
+                if (adapterView.getItemAtPosition(position).equals("Select")) {
                     Toast.makeText(GeneratingActivity.this, "Please select a driver", Toast.LENGTH_SHORT).show();
                     Log.v(TAG, "User, must select a driver");
-                }
-                else
-                {
+                } else {
                     //show selected spinner item
                     Toast.makeText(GeneratingActivity.this, "Selected Item: " + driverSelection, Toast.LENGTH_SHORT).show();
-                    Log.v(TAG, "User selected " + driverSelection + " driver." );
+                    Log.v(TAG, "User selected " + driverSelection + " driver.");
 
                     //Initially tells user to choose a driver.
-                    if(driverSelection.equals("Select"))
-                    {
+                    if (driverSelection.equals("Select")) {
                         driverSelection = "Select";
                         Toast.makeText(GeneratingActivity.this, "Choose a driver.", Toast.LENGTH_SHORT).show();
                     }
 
                     //Moves to PlayManuallyActive if Manual is selected and progress is at 100%
-                    if(driverSelection.equals("Manual"))
-                    {
+                    if (driverSelection.equals("Manual")) {
                         //Passes Driver information to the next activity if at 100%
-                        if(progress == 100){
-                            openPlayManuallyActivity();
-                        }
-                        else{
-                        Toast.makeText(GeneratingActivity.this, "The maze will being shortly.", Toast.LENGTH_SHORT).show();
-                            Log.v(TAG, "User selected " + driverSelection + " driver before maze was done. Wait for loading to finish" );
+                        if (progress == 100) {
+                            goToPlaying();
+                        } else {
+                            Toast.makeText(GeneratingActivity.this, "The maze will being shortly.", Toast.LENGTH_SHORT).show();
+                            Log.v(TAG, "User selected " + driverSelection + " driver before maze was done. Wait for loading to finish");
                         }
                     }
 
                     //Moves to PlayAnimationActivity if Wizard is selected and progress is at 100%
-                    else if(driverSelection.equals("Wizard"))
-                    {
+                    else if (driverSelection.equals("Wizard")) {
                         //Passes Driver and Quality information to the next activity if at 100%
-                        if(progress == 100){
-                            openPlayAnimationActivity();
-                        }
-                        else{
+                        if (progress == 100) {
+                            goToPlaying();
+                        } else {
                             Toast.makeText(GeneratingActivity.this, "The maze will being shortly.", Toast.LENGTH_SHORT).show();
-                            Log.v(TAG, "User selected " + driverSelection + " driver before maze was done. Wait for loading to finish" );
+                            Log.v(TAG, "User selected " + driverSelection + " driver before maze was done. Wait for loading to finish");
                         }
                     }
 
                     //Moves to PlayAnimationActivity if Wall-Follower is selected and progress is at 100%
-                    else if(driverSelection.equals("Wall-Follower"))
-                    {
+                    else if (driverSelection.equals("Wall-Follower")) {
                         //Passes Driver and Quality information to the next activity if at 100%
-                        if(progress == 100){
-                            openPlayAnimationActivity();
-                        }
-                        else{
+                        if (progress == 100) {
+                            goToPlaying();
+                        } else {
                             Toast.makeText(GeneratingActivity.this, "The maze will being shortly.", Toast.LENGTH_SHORT).show();
-                            Log.v(TAG, "User selected " + driverSelection + " driver before maze was done. Wait for loading to finish" );
+                            Log.v(TAG, "User selected " + driverSelection + " driver before maze was done. Wait for loading to finish");
                         }
                     }
-
-
                 }
             }
 
@@ -257,11 +204,11 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
         driverSpinner.setAdapter(driver_adapter);
 
 
-
         //FOR RobotQuality SPINNER
 
         //Sets the spinner by ID
         robotQualitySpinner = findViewById(R.id.RobotQuality_Spinner);
+        qualitySelection = "Premium";
 
         //Displays the chosen Quality and sets EXTRA_ROBOTQUALITY for passing to next activity
         robotQualitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -270,8 +217,9 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
 
                 qualitySelection = adapterView.getItemAtPosition(position).toString();
                 Toast.makeText(GeneratingActivity.this, "Selected Item: " + qualitySelection, Toast.LENGTH_SHORT).show();
-                Log.v(TAG, "User selected " + qualitySelection + " robot quality." );
+                Log.v(TAG, "User selected " + qualitySelection + " robot quality.");
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
@@ -289,8 +237,48 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
         robotQuality_adapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         robotQualitySpinner.setAdapter(robotQuality_adapter);
 
+        start();
+    }
+
+    //FOR THE PROGRESS BAR
+    //setProgress();
+
+    /**
+     * Draws the current state of maze generation progress onto the screen
+     */
+
+    private void updateProgressBar(int progress) {
+        lpi = findViewById(R.id.LinearProgressBar);
+        cpi = findViewById(R.id.circularProgressBar);
+        textGrowing = findViewById(R.id.GrowingText);
+
+        lpi.setIndeterminate(false);
+        cpi.setIndeterminate(false);
+
+        lpi.setProgress(progress, false);
+        cpi.setProgress(progress, false);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                textGrowing.setText("Growing Trees... " + progress + "%");
+            }
+        });
+
+        if (progress == 100) {
+            goToPlaying();
+        }
+             else if (driverSelection.equals("Select")) {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(GeneratingActivity.this, "Generation is complete. Choose a driver to begin the maze.", Toast.LENGTH_LONG).show();
+                        Log.v(TAG, "Loading is finished, waiting for user to choose a driver");
+                    }
+                });
+            }
+            //Uses the "runOnUiThread()" method, to run a Runnable on the main UI thread and display the toast message.
 
     }
+
 
     public void openHome() {
         Intent homeIntent = new Intent(this, AMazeActivity.class);
@@ -304,6 +292,7 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
         animationIntent.putExtra(EXTRA_ROBOTQUALITY, qualitySelection);
         Log.v(TAG, "Driver: " + driverSelection + ",  Robot Quality: " + qualitySelection);
         startActivity(animationIntent);
+        finish();
     }
 
     public void openPlayManuallyActivity() {
@@ -311,16 +300,26 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
         manualIntent.putExtra(EXTRA_DRIVER, driverSelection);
         Log.v(TAG, "Driver: " + driverSelection);
         startActivity(manualIntent);
+        finish();
+    }
+
+
+    /**
+     * Starts the maze generation
+     */
+    @Override
+    public void updateProgress(int percentage) {
+        updateProgressBar(percentage);
     }
 
     @Override
     public int getSkillLevel() {
-        return 0;
+        return skill_level;
     }
 
     @Override
     public Builder getBuilder() {
-        return null;
+        return builderStringToBuilder(generation);
     }
 
     @Override
@@ -330,16 +329,44 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
 
     @Override
     public int getSeed() {
-        return 0;
+        return seed;
     }
 
     @Override
     public void deliver(Maze mazeConfig) {
+        DataHolder.setMaze(mazeConfig);
+    }
+
+    private void start() {
+        mazeFactory.order(this);
+    }
+
+    /**
+     * Converts the string representation to a Builder
+     */
+    public Builder builderStringToBuilder(String builderString) {
+        switch (builderString) {
+            case "DFS":
+                return Builder.DFS;
+            case "Prim":
+                return Builder.Prim;
+            case "Boruvka":
+                return Builder.Boruvka;
+        }
+
+        return Builder.DFS;
+    }
+
+    private void goToPlaying() {
+        Log.i("Final driver: ", driverSelection);
+        if (driverSelection.equals("Manual")) {
+            Log.i("Passed!", "Passed!");
+            openPlayManuallyActivity();
+        } else {
+            Log.i("Failed!", "Failed!");
+            openPlayAnimationActivity();
+        }
 
     }
 
-    @Override
-    public void updateProgress(int percentage) {
-
-    }
 }

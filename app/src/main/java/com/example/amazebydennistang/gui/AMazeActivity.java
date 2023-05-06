@@ -34,7 +34,7 @@ public class AMazeActivity extends AppCompatActivity {
     private Button Revisit_Button;
     private BottomNavigationView nav;
     private int skill_level;
-    private int seed;
+    private int seed = 10000;
     private String generation_selection;
     private String room_selection;
 
@@ -50,6 +50,10 @@ public class AMazeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mazeactivity);
+
+        new Random(seed);
+        Random random = new Random();
+        seed = random.nextInt(seed);
 
         //FOR BOTTOM HOME BAR
         nav = findViewById(R.id.bottomNavigationView);
@@ -97,8 +101,6 @@ public class AMazeActivity extends AppCompatActivity {
         //Explore Button, takes
         Explore_Button = findViewById(R.id.Explore_Button);
         Explore_Button.setOnClickListener(new View.OnClickListener() {
-            Random random = new Random();
-            int seed = random.nextInt();
 
             @Override
             public void onClick(View view)
@@ -131,7 +133,7 @@ public class AMazeActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
                 myTV.setVisibility(View.VISIBLE); //Changes visibility of text only while scraping
-                myTV.setText(progress + "/100"); //Visualizes progress compared to max value
+                myTV.setText(progress + "/15"); //Visualizes progress compared to max value
                 skill_level = progress;
             }
 

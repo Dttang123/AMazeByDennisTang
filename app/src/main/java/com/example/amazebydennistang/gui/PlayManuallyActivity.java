@@ -42,6 +42,9 @@ public class PlayManuallyActivity extends AppCompatActivity {
 
         //Shows custom view
         mazePanel = findViewById(R.id.mazePanel);
+        if(mazePanel == null){
+            System.out.println("Doesnt work");
+        }
 
         //Passed driver and robotQuality from Generating, used in P7
         intent = getIntent();
