@@ -10,9 +10,11 @@
         layout="@layout/zoom_toolbar" />
 
     <com.example.amazebydennistang.gui.MazePanel
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:id="@+id/mazePanel"
+        android:layout_height="400dp"
+        android:layout_width="400dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"

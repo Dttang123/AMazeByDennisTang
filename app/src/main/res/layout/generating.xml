@@ -33,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="52dp"
         android:indeterminate="false"
+        android:max="100"
         app:indicatorSize="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
