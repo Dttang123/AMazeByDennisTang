@@ -26,12 +26,16 @@ public class PlayManuallyActivity extends AppCompatActivity {
     Button ShortCut_Button;
     Button Zoom_In_Button;
     Button Zoom_Out_Button;
+    boolean visible;
     int path_length = 0;
-    int shortest_path = 150;
-    MazePanel mazePanel;
+    int shortest_path;
+    MazePanel panel;
+    PlayingActivityOrganizer activityOrganizer;
+    String outOfBounds_message = "You jumped out of bounds!";
     String EXTRA_DRIVER = "com.example.mazewidgetpractice.EXTRA_DRIVER";
     String EXTRA_PATH_LENGTH = "com.example.mazewidgetpractice.EXTRA_PATH_LENGTH";
     String EXTRA_SHORTEST_PATH = "com.example.mazewidgetpractice.SHORTEST_PATH" ;
+    String EXTRA_MESSAGE = "com.example.mazewidgetpractice.SHORTEST_MESSAGE" ;
     private static final String TAG = "PlayManuallyActivity: ";
     Intent intent;
 
@@ -40,11 +44,13 @@ public class PlayManuallyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playmanuallyactivity);
 
-        //Shows custom view
-        mazePanel = findViewById(R.id.mazePanel);
-        if(mazePanel == null){
-            System.out.println("Doesnt work");
-        }
+        //Shows custom view and initializes buttons
+        panel = findViewById(R.id.mazePanel);
+        activityOrganizer = new PlayingActivityOrganizer();
+        activityOrganizer.start(panel, true);
+
+        //For connects manual activity to PlayingAnimation
+        activityOrganizer.setManualActivity(this);
 
         //Passed driver and robotQuality from Generating, used in P7
         intent = getIntent();
@@ -67,8 +73,6 @@ public class PlayManuallyActivity extends AppCompatActivity {
                         Log.v(TAG, "Home button is clicked");
                         openHome();
                 }
-
-
                 return true;
             }
         });
@@ -107,10 +111,12 @@ public class PlayManuallyActivity extends AppCompatActivity {
                     // Toggle is ON
                     Toast.makeText(PlayManuallyActivity.this, "Show Walls: ON", Toast.LENGTH_SHORT).show();
                     Log.v(TAG, "Show Walls toggled: ON");
+                    activityOrganizer.userInput(Constants.UserInput.SHOWWALLS);
                 } else {
                     // Toggle is OFF
                     Toast.makeText(PlayManuallyActivity.this, "Show Walls: OFF", Toast.LENGTH_SHORT).show();
                     Log.v(TAG, "Show Walls toggled: OFF");
+                    activityOrganizer.userInput(Constants.UserInput.SHOWWALLS);
                 }
             }
         });
@@ -125,10 +131,12 @@ public class PlayManuallyActivity extends AppCompatActivity {
                     // Toggle is ON
                     Toast.makeText(PlayManuallyActivity.this, "Show Maze: ON", Toast.LENGTH_SHORT).show();
                     Log.v(TAG, "Show Maze toggled: ON");
+                    activityOrganizer.userInput(Constants.UserInput.SHOWFULLMAZE);
                 } else {
                     // Toggle is OFF
                     Toast.makeText(PlayManuallyActivity.this, "Show Maze: OFF", Toast.LENGTH_SHORT).show();
                     Log.v(TAG, "Show Maze toggled: OFF");
+                    activityOrganizer.userInput(Constants.UserInput.SHOWFULLMAZE);
                 }
             }
         });
@@ -143,10 +151,12 @@ public class PlayManuallyActivity extends AppCompatActivity {
                     // Toggle is ON
                     Toast.makeText(PlayManuallyActivity.this, "Show Solution: ON", Toast.LENGTH_SHORT).show();
                     Log.v(TAG, "Show Solution toggled: ON");
+                    activityOrganizer.userInput(Constants.UserInput.SHOWSOLUTION);
                 } else {
                     // Toggle is OFF
                     Toast.makeText(PlayManuallyActivity.this, "Show Solution: OFF", Toast.LENGTH_SHORT).show();
                     Log.v(TAG, "Show Solution toggled: ON");
+                    activityOrganizer.userInput(Constants.UserInput.SHOWSOLUTION);
                 }
             }
         });
@@ -173,6 +183,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(PlayManuallyActivity.this, "You clicked ZOOM IN", Toast.LENGTH_SHORT).show();;
                 Log.v(TAG, "Zoom in button is clicked");
+                activityOrganizer.userInput(Constants.UserInput.ZOOMIN);
             }
         });
 
@@ -182,6 +193,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(PlayManuallyActivity.this, "You clicked ZOOM OUT", Toast.LENGTH_SHORT).show();;
                 Log.v(TAG, "Zoom out button is clicked");
+                activityOrganizer.userInput(Constants.UserInput.ZOOMOUT);
             }
         });
 
@@ -200,6 +212,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(PlayManuallyActivity.this, "You clicked the left arrow", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Left arrow button is clicked");
+                activityOrganizer.userInput(Constants.UserInput.LEFT);
                 path_length += 1;
             }
         });
@@ -209,6 +222,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(PlayManuallyActivity.this, "You clicked the right arrow", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Right arrow button is clicked");
+                activityOrganizer.userInput(Constants.UserInput.RIGHT);
                 path_length += 1;
             }
         });
@@ -217,6 +231,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(PlayManuallyActivity.this, "You clicked the up arrow", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Up arrow button is clicked");
+                activityOrganizer.userInput(Constants.UserInput.UP);
                 path_length += 1;
             }
         });
@@ -225,6 +240,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(PlayManuallyActivity.this, "You clicked jump", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Jump button is clicked");
+                activityOrganizer.userInput(Constants.UserInput.JUMP);
                 path_length += 1;
             }
         });
@@ -235,6 +251,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
     public void openHome() {
         Intent homeIntent = new Intent(this, AMazeActivity.class);
         startActivity(homeIntent);
+        finish();
     }
 
     //Creates intent to go to winning screen with pathlength and shortest path values passed
@@ -244,5 +261,26 @@ public class PlayManuallyActivity extends AppCompatActivity {
         winningIntent.putExtra(EXTRA_SHORTEST_PATH, shortest_path);
         Log.v(TAG, "Shortest Path: " + shortest_path + ", Path Length: " + path_length);
         startActivity(winningIntent);
+        finish();
     }
+    public void openLosing(int path_length, int shortest_path) {
+        Intent losingIntent = new Intent(this, LosingActivity.class);
+        losingIntent.putExtra(EXTRA_PATH_LENGTH, path_length);
+        losingIntent.putExtra(EXTRA_SHORTEST_PATH, shortest_path);
+        losingIntent.putExtra(EXTRA_MESSAGE, outOfBounds_message);
+        startActivity(losingIntent);
+        finish();
+    }
+
+    public int getPathLength(){
+        return path_length;
+    }
+
+
+
+
+    /**
+     * method is called when to switch to either StateWinning or StateLosing
+     */
+
 }
