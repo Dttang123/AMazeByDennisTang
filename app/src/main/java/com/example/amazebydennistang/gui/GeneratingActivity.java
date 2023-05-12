@@ -262,9 +262,7 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
             public void run() {
                 textGrowing.setText("Growing Trees... " + progress + "%");
                 if (progress == 100) {
-
-                    //goToPlaying(); in real implementation
-                    openPlayManuallyActivity();
+                    goToPlaying();
                 }
                 else if (driverSelection.equals("Select")) {
                     runOnUiThread(new Runnable() {

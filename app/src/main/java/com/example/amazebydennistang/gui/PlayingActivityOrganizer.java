@@ -27,14 +27,17 @@ public class PlayingActivityOrganizer {
     private boolean started;
     //used to switch states once traversal has finished
     private PlayManuallyActivity manuallyActivity  = null;
+    private PlayAnimationActivity animationActivity  = null;
 
     Maze maze;
     int px, py ; // current position on maze grid (x,y)
-    int dx, dy ; // current position on maze grid (x,y)
-
 
     public void setManualActivity(PlayManuallyActivity pma){
+
         this.manuallyActivity = pma;
+    }
+    public void setAnimationActivity(PlayAnimationActivity paa){
+        this.animationActivity = paa;
     }
     public void start(MazePanel panel, boolean manual) {
         // keep the reference to the panel for drawing

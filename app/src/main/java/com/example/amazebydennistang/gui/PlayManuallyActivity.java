@@ -49,7 +49,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
         activityOrganizer = new PlayingActivityOrganizer();
         activityOrganizer.start(panel, true);
 
-        //For connects manual activity to PlayingAnimation
+        //For connects manual activity to activity organizer
         activityOrganizer.setManualActivity(this);
 
         //Passed driver and robotQuality from Generating, used in P7
@@ -158,21 +158,6 @@ public class PlayManuallyActivity extends AppCompatActivity {
                     Log.v(TAG, "Show Solution toggled: ON");
                     activityOrganizer.userInput(Constants.UserInput.SHOWSOLUTION);
                 }
-            }
-        });
-
-
-
-        /*
-         * Takes user to winning screen
-         */
-        ShortCut_Button = findViewById(R.id.shortcut);
-        ShortCut_Button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(PlayManuallyActivity.this, "You clicked the shortcut button", Toast.LENGTH_SHORT).show();;
-                Log.v(TAG, "Shortcut button is clicked");
-                openWinning(path_length, shortest_path);
             }
         });
 

@@ -44,6 +44,8 @@ public class PlayAnimationActivity extends AppCompatActivity {
     boolean isHomeButtonClicked = false;
     boolean isLosingButtonClicked = false;
     boolean isWinningButtonClicked = false;
+    MazePanel panel;
+    PlayingActivityOrganizer activityOrganizer;
     String noEnergy_message = "Your robot ran out of energy!";
     String crash_message = "Your robot crashed!";
     String EXTRA_DRIVER = "com.example.mazewidgetpractice.EXTRA_DRIVER";
@@ -66,6 +68,11 @@ public class PlayAnimationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playanimationactivity);
+
+        //To test that maze shows up
+        panel = findViewById(R.id.mazePanel);
+        activityOrganizer = new PlayingActivityOrganizer();
+        activityOrganizer.start(panel, false);
 
         //Passed driver and robotQuality from Generating, used in P7
         intent = getIntent();
@@ -128,6 +135,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(PlayAnimationActivity.this, "You clicked ZOOM IN", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Zoom in button clicked");
+                activityOrganizer.userInput(Constants.UserInput.ZOOMIN);
             }
         });
 
@@ -137,6 +145,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(PlayAnimationActivity.this, "You clicked ZOOM OUT", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Zoom out button clicked");
+                activityOrganizer.userInput(Constants.UserInput.ZOOMOUT);
             }
         });
 
@@ -168,10 +177,16 @@ public class PlayAnimationActivity extends AppCompatActivity {
                     // Toggle is ON
                     Toast.makeText(PlayAnimationActivity.this, "Show Completed Maze: ON", Toast.LENGTH_SHORT).show();
                     Log.v(TAG, "Completed Maze toggled: ON");
+                    activityOrganizer.userInput(Constants.UserInput.SHOWWALLS);
+                    activityOrganizer.userInput(Constants.UserInput.SHOWFULLMAZE);
+                    activityOrganizer.userInput(Constants.UserInput.SHOWSOLUTION);
                 } else {
                     // Toggle is OFF
                     Toast.makeText(PlayAnimationActivity.this, "Show Completed Maze: OFF", Toast.LENGTH_SHORT).show();
                     Log.v(TAG, "Completed Maze toggled: OFF");
+                    activityOrganizer.userInput(Constants.UserInput.SHOWWALLS);
+                    activityOrganizer.userInput(Constants.UserInput.SHOWFULLMAZE);
+                    activityOrganizer.userInput(Constants.UserInput.SHOWSOLUTION);
                 }
             }
         });
