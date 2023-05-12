@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/forest"
     tools:context=".gui.GeneratingActivity">
 
     <include
@@ -38,7 +39,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/LinearProgressBar"
-        app:trackColor="@android:color/system_accent1_600"
+        app:trackColor="@color/teal_700"
         app:trackThickness="10dp" />
 
     <ImageView
@@ -52,10 +53,11 @@
         app:layout_constraintTop_toTopOf="@+id/circularProgressBar"
         app:layout_constraintVertical_bias="0.54"
         app:srcCompat="@android:drawable/ic_menu_manage"
-        app:tint="#3F51B5" />
+        app:tint="#FFFFFF" />
 
 
     <TextView
+        android:textColor="@color/white"
         android:id="@+id/GrowingText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -67,6 +69,8 @@
         app:layout_constraintTop_toBottomOf="@+id/LinearProgressBar" />
 
     <Spinner
+        android:theme="@style/Theme.Material3.DynamicColors.Light"
+        android:backgroundTint="@color/white"
         android:id="@+id/Driver_Spinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -78,6 +82,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
+        android:theme="@style/Theme.Material3.DynamicColors.Light"
+        android:backgroundTint="@color/white"
         android:id="@+id/RobotQuality_Spinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -90,6 +96,7 @@
         app:layout_constraintVertical_bias="0.662" />
 
     <TextView
+        android:textColor="@color/white"
         android:id="@+id/MazeDriverText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -101,6 +108,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:textColor="@color/white"
         android:id="@+id/RobotQualityText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -114,6 +122,7 @@
         app:layout_constraintTop_toBottomOf="@+id/Driver_Spinner" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:background="@color/teal_700"
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

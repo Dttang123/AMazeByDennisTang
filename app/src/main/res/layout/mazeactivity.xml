@@ -5,14 +5,16 @@
     android:id="@+id/EscapeText"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/forest"
     tools:context=".gui.AMazeActivity">
 
     <include
         android:id="@+id/include"
         layout="@layout/toolbar" />
 
-
     <Spinner
+        android:theme="@style/Theme.Material3.DynamicColors.Light"
+        android:backgroundTint="@color/white"
         android:id="@+id/Generation_Spinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -24,6 +26,7 @@
         app:layout_constraintVertical_bias="0.537" />
 
     <TextView
+        android:textColor="@color/white"
         android:id="@+id/MazeRoomsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,6 +54,7 @@
         app:layout_constraintVertical_bias="0.226" />
 
     <TextView
+        android:textColor="@color/white"
         android:id="@+id/Skill_Level"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -65,6 +69,7 @@
         app:layout_constraintVertical_bias="0.404" />
 
     <TextView
+        android:textColor="@color/white"
         android:id="@+id/myTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -77,6 +82,7 @@
 
 
     <Button
+        android:backgroundTint="@color/teal_700"
         android:id="@+id/Explore_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -89,6 +95,7 @@
         app:layout_constraintVertical_bias="0.908" />
 
     <Button
+        android:backgroundTint="@color/teal_700"
         android:id="@+id/Revisit_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -101,6 +108,7 @@
         app:layout_constraintVertical_bias="0.908" />
 
     <TextView
+        android:textColor="@color/white"
         android:id="@+id/EscapeWoodsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -113,6 +121,7 @@
         app:layout_constraintVertical_bias="0.05" />
 
     <TextView
+        android:textColor="@color/white"
         android:id="@+id/ChooseSettingsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -126,6 +135,8 @@
 
     <Spinner
         android:id="@+id/Rooms_Spinner"
+        android:theme="@style/Theme.Material3.DynamicColors.Light"
+        android:backgroundTint="@color/white"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
@@ -136,6 +147,7 @@
         app:layout_constraintVertical_bias="0.728" />
 
     <TextView
+        android:textColor="@color/white"
         android:id="@+id/MazeGeneratorText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -149,6 +161,7 @@
         app:layout_constraintVertical_bias="0.673" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:background="@color/teal_700"
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/forest"
     tools:context=".gui.GeneratingActivity">
 
     <include
@@ -23,6 +24,8 @@
         app:layout_constraintVertical_bias="0.534" />
 
     <ToggleButton
+        android:background="@color/teal_700"
+        android:textColor="@color/white"
         android:id="@+id/Show_Walls_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,6 +39,7 @@
         app:layout_constraintVertical_bias="0.032" />
 
     <TextView
+        android:textColor="@color/white"
         android:id="@+id/Show_Walls_Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,6 +53,8 @@
         app:layout_constraintVertical_bias="0.041" />
 
     <ToggleButton
+        android:background="@color/teal_700"
+        android:textColor="@color/white"
         android:id="@+id/Show_Maze_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -63,6 +69,7 @@
 
 
     <TextView
+        android:textColor="@color/white"
         android:id="@+id/Show_Maze_Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -76,6 +83,8 @@
         app:layout_constraintVertical_bias="0.04" />
 
     <ToggleButton
+        android:background="@color/teal_700"
+        android:textColor="@color/white"
         android:id="@+id/Show_Solution_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -89,6 +98,7 @@
         app:layout_constraintVertical_bias="0.032" />
 
     <TextView
+        android:textColor="@color/white"
         android:id="@+id/Show_Solution_Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -101,19 +111,8 @@
         app:layout_constraintTop_toBottomOf="@+id/Show_Solution_Button"
         app:layout_constraintVertical_bias="0.04" />
 
-    <Button
-        android:id="@+id/shortcut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ShortCut"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.946"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include"
-        app:layout_constraintVertical_bias="0.976" />
-
     <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:background="@color/teal_700"
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
