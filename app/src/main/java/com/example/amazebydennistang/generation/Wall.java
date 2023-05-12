@@ -1,6 +1,7 @@
 package com.example.amazebydennistang.generation;
 
 import com.example.amazebydennistang.gui.MazeFileWriter;
+import com.example.amazebydennistang.gui.ColorTheme;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -121,7 +122,7 @@ public class Wall {
         partition = false;
         seen = false;
         // determine color
-        // setColor(ColorTheme.getWallColor(distance, cc, getExtensionX()));
+        setColor(ColorTheme.getWallColor(distance, cc, getExtensionX()));
         // all fields initialized
     }
 
@@ -313,6 +314,7 @@ public class Wall {
      * @return the color
      */
     public int getColor() {
+
         return col;
     }
 

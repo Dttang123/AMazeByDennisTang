@@ -12,6 +12,7 @@ public class Wallboard {
 	private int x;
 	private int y;
 	private int[] d; // direction (dx,dy) pair
+	int value;
 
 	/**
 	 * Constructor, values have same effect has setWall(x,y,cd).
@@ -91,6 +92,15 @@ public class Wallboard {
 	 * @return the direction of this wallboard with regard to its cell location
 	 */
 	public CardinalDirection getDirection() {
+
 		return CardinalDirection.getDirection(d[0], d[1]) ;
 	}
+
+	public int getValue(){
+		return this.value;
+	}
+	public int setValue(int value){
+		return this.value = value;
+	}
+
 }

@@ -8,8 +8,8 @@ package com.example.amazebydennistang.gui;
  */
 public class Constants {
 	// The panel used to display the maze has a fixed dimension
-	public static final int VIEW_WIDTH = 400;
-	public static final int VIEW_HEIGHT = 400;
+	public static final int VIEW_WIDTH = 1100;
+	public static final int VIEW_HEIGHT = 1100;
 	public static final int MAP_UNIT = 128;
 	public static final int VIEW_OFFSET = MAP_UNIT/8;
 	public static final int STEP_SIZE = MAP_UNIT/4;
@@ -28,7 +28,8 @@ public class Constants {
 	public static final int MAX_SKILL_LEVEL = 15;
 		
 	// Possible user input  
-	public enum UserInput {RETURNTOTITLE, START, UP, DOWN, LEFT, RIGHT, JUMP, TOGGLELOCALMAP, TOGGLEFULLMAP, TOGGLESOLUTION, ZOOMIN, ZOOMOUT }
+	public enum UserInput {RETURNTOTITLE, START, UP, LEFT, RIGHT, JUMP, SHOWWALLS, SHOWFULLMAZE, SHOWSOLUTION, ZOOMIN, ZOOMOUT }
+	//public enum
 
 	// fixing a value matching the escape key
 	public static final int ESCAPE = 27;
