@@ -261,20 +261,23 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
             @Override
             public void run() {
                 textGrowing.setText("Growing Trees... " + progress + "%");
+                if (progress == 100) {
+
+                    //goToPlaying(); in real implementation
+                    openPlayManuallyActivity();
+                }
+                else if (driverSelection.equals("Select")) {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(GeneratingActivity.this, "Generation is complete. Choose a driver to begin the maze.", Toast.LENGTH_LONG).show();
+                            Log.v(TAG, "Loading is finished, waiting for user to choose a driver");
+                        }
+                    });
+                }
             }
         });
 
-        if (progress == 100) {
-            goToPlaying();
-        }
-             else if (driverSelection.equals("Select")) {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(GeneratingActivity.this, "Generation is complete. Choose a driver to begin the maze.", Toast.LENGTH_LONG).show();
-                        Log.v(TAG, "Loading is finished, waiting for user to choose a driver");
-                    }
-                });
-            }
+
             //Uses the "runOnUiThread()" method, to run a Runnable on the main UI thread and display the toast message.
 
     }
@@ -334,7 +337,13 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
 
     @Override
     public void deliver(Maze mazeConfig) {
-        DataHolder.setMaze(mazeConfig);
+        if(mazeConfig == null){
+            Log.v(TAG, "Maze is null, something is wrong");
+        }
+        else{
+            Log.v(TAG, "Maze is not null, you're fine");
+            DataHolder.setMaze(mazeConfig);
+        }
     }
 
     private void start() {
@@ -362,9 +371,11 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
         if (driverSelection.equals("Manual")) {
             Log.i("Passed!", "Passed!");
             openPlayManuallyActivity();
+            finish();
         } else {
             Log.i("Failed!", "Failed!");
             openPlayAnimationActivity();
+            finish();
         }
 
     }
