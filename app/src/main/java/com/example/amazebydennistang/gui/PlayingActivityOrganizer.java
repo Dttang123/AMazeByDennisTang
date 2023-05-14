@@ -28,6 +28,11 @@ public class PlayingActivityOrganizer {
     //used to switch states once traversal has finished
     private PlayManuallyActivity manuallyActivity  = null;
     private PlayAnimationActivity animationActivity  = null;
+    //For PlayAnimationActivity
+    private Thread thread;
+    private Runnable runnable;
+    private Robot robot;
+    private RobotDriver driver;
 
     Maze maze;
     int px, py ; // current position on maze grid (x,y)
@@ -37,8 +42,10 @@ public class PlayingActivityOrganizer {
         this.manuallyActivity = pma;
     }
     public void setAnimationActivity(PlayAnimationActivity paa){
+
         this.animationActivity = paa;
     }
+
     public void start(MazePanel panel, boolean manual) {
         // keep the reference to the panel for drawing
         this.panel = panel;
@@ -60,7 +67,9 @@ public class PlayingActivityOrganizer {
     }
     private void initVariables(){
         this.started = true;
+        robot = new ReliableRobot();
         this.setMaze(DataHolder.getMaze());
+        robot.setOrganizer(this);
         // adjust internal state of maze model
         // visibility settings
         showMaze = false ;
@@ -74,9 +83,11 @@ public class PlayingActivityOrganizer {
 
         // set the current position and direction consistently with the viewing direction
         setPositionDirectionViewingDirection();
-
         this.setShortestDistance();
 
+        if(!manual){
+            this.initDriver();
+        }
 
     }
     /**
@@ -107,13 +118,12 @@ public class PlayingActivityOrganizer {
         mapView = new Map(seenCells, 15, maze) ;
         // draw the initial screen for this state
         draw(cd.angle(), 0);
-
-
     }
 
     public boolean userInput(Constants.UserInput userInput) {
         switch (userInput) {
             case UP: // move forward
+                robot.move(1);
                 walk(1);
                 //Checks if you left the maze
                 if(!maze.isValidPosition(px,py)) {
@@ -123,9 +133,11 @@ public class PlayingActivityOrganizer {
                 }
                 break;
             case LEFT: // turn left
+                robot.rotate(Robot.Turn.LEFT);
                 rotate(1);
                 break;
             case RIGHT: // turn right
+                robot.rotate(Robot.Turn.RIGHT);
                 rotate(-1);
                 break;
             case JUMP:
@@ -205,15 +217,23 @@ public class PlayingActivityOrganizer {
             return;
         }
         Log.v("draw method", "reached draw");
-        // draw the first person view and the map view if wanted
+        // draws the first person view and the map view if initiated
         firstPersonView.draw(panel, px, py, walkStep, angle,
                 maze.getPercentageForDistanceToExit(px, py)) ;
         if (isInMapMode()) {
             mapView.draw(panel, px, py, angle, walkStep,
                     isInShowMazeMode(),isInShowSolutionMode()) ;
         }
-        // update the screen with the buffer graphics
-        panel.commit() ;
+        // updates the screen
+        panel.commit();
+        // Used to make sure there is time inbetween drawing updates, only for driver
+        if (!manual){
+            try {
+                Thread.sleep(15);
+            } catch (InterruptedException ex){
+                Thread.currentThread().interrupt();
+            }
+        }
     }
     private synchronized void walk(int dir) {
         // check if there is a wall in the way
@@ -255,13 +275,13 @@ public class PlayingActivityOrganizer {
     }
 
 
-    ////////////////////////////// set methods ///////////////////////////////////////////////////////////////
-    ////////////////////////////// Actions that can be performed on the maze model ///////////////////////////
+    // Set Methods
+    // Actions for the maze model
     protected void setCurrentPosition(int x, int y) {
         px = x ;
         py = y ;
     }
-    ////////////////////////////// get methods ///////////////////////////////////////////////////////////////
+    // Get Methods
     protected int[] getCurrentPosition() {
         int[] result = new int[2];
         result[0] = px;
@@ -283,4 +303,31 @@ public class PlayingActivityOrganizer {
     public Maze getMaze() {
         return maze ;
     }
+
+    //Initialization of driver and maze for driver
+    public void setMazeDriver(RobotDriver driver){
+        this.driver = driver;
+    }
+
+    private void initDriver()
+    {
+        if (driver == null)
+            return;
+
+        driver.setRobot(robot);
+        driver.setMaze(DataHolder.getMaze());
+        runnable = new Runnable() {
+            public void run() {
+                try {
+                    driver.drive2Exit();
+                }
+                catch (Exception e) {
+                }
+            }
+        };
+
+        thread = new Thread(runnable);
+        thread.start();
+    }
+
 }

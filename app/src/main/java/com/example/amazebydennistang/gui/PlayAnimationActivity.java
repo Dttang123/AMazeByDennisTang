@@ -84,6 +84,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
         Log.v(TAG, "Driver: " + driver + ",  Robot Quality: " + robotQuality);
 
 
+
         //FOR BOTTOM HOME BAR
         nav = findViewById(R.id.bottomNavigationView);
 
