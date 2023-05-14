@@ -1,6 +1,7 @@
 package com.example.amazebydennistang.gui;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -37,6 +38,8 @@ public class AMazeActivity extends AppCompatActivity {
     private int seed = 10000;
     private String generation_selection;
     private String room_selection;
+    private MediaPlayer player;
+
 
     //Names to be passed into Generating
     String EXTRA_SEED = "com.example.mazewidgetpractice.EXTRA_SEED" ;
@@ -50,6 +53,7 @@ public class AMazeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mazeactivity);
+        startOwl();
 
         new Random(seed);
         Random random = new Random();
@@ -67,6 +71,7 @@ public class AMazeActivity extends AppCompatActivity {
 
                 switch (item.getItemId()){ //Possibly add more options later
                     case R.id.home:
+                        playClickSound();
                         Toast.makeText(AMazeActivity.this, "Home", Toast.LENGTH_SHORT).show();
                         Log.v(TAG, "Home button is clicked.");
                         openHome();
@@ -84,6 +89,7 @@ public class AMazeActivity extends AppCompatActivity {
         leftIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                playClickSound();
                 Toast.makeText(AMazeActivity.this, "You clicked the back icon", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Back button is clicked.");
                 openHome();
@@ -92,8 +98,10 @@ public class AMazeActivity extends AppCompatActivity {
         rightIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                playClickSound();
                 Toast.makeText(AMazeActivity.this, "You clicked settings icon", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Settings button is clicked.");
+
             }
         });
 
@@ -107,6 +115,7 @@ public class AMazeActivity extends AppCompatActivity {
             {
                 Toast.makeText(AMazeActivity.this, "You clicked EXPLORE", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Explore button is clicked.");
+                playClickSound();
                 openGenerating();
             }
         });
@@ -119,6 +128,7 @@ public class AMazeActivity extends AppCompatActivity {
             {
                 Toast.makeText(AMazeActivity.this, "You clicked REVISIT", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Revisit button is clicked.");
+                playClickSound();
                 openGenerating();
             }
         });
@@ -157,6 +167,7 @@ public class AMazeActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 generation_selection  = adapterView.getItemAtPosition(position).toString();
+                playClickSound();
                 Toast.makeText(AMazeActivity.this, "Selected Generator: " + generation_selection, Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Selected Generator: " + generation_selection );
 
@@ -183,7 +194,7 @@ public class AMazeActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 room_selection = adapterView.getItemAtPosition(position).toString();
-
+                playClickSound();
                 if(adapterView.getItemAtPosition(position).equals("Yes"))
                 {
                     Toast.makeText(AMazeActivity.this, "The maze will have rooms", Toast.LENGTH_SHORT).show();
@@ -227,6 +238,16 @@ public class AMazeActivity extends AppCompatActivity {
         generatingIntent.putExtra(EXTRA_ROOMS, room_selection);
         Log.v(TAG, "Seed: " + seed + ",  Skill Level: " + skill_level + ",  Generator: " + generation_selection + ",  Rooms: " + room_selection);
         startActivity(generatingIntent);
+    }
+
+    private void startOwl(){
+        player = MediaPlayer.create(getApplicationContext(), R.raw.owl);
+        player.start();
+    }
+
+    private void playClickSound(){
+        MediaPlayer click = MediaPlayer.create(getApplicationContext(), R.raw.clicksound);
+        click.start();
     }
 
 }

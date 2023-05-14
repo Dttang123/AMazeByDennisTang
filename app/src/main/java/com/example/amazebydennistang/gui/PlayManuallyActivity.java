@@ -1,6 +1,7 @@
 package com.example.amazebydennistang.gui;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
     boolean visible;
     int path_length = 0;
     int shortest_path;
+    private MediaPlayer music;
     MazePanel panel;
     PlayingActivityOrganizer activityOrganizer;
     String outOfBounds_message = "You jumped out of bounds!";
@@ -43,6 +45,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playmanuallyactivity);
+        playMusic();
 
         //Shows custom view and initializes buttons
         panel = findViewById(R.id.mazePanel);
@@ -71,6 +74,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
                     case R.id.home:
                         Toast.makeText(PlayManuallyActivity.this, "Home", Toast.LENGTH_SHORT).show();
                         Log.v(TAG, "Home button is clicked");
+                        playClickSound();
                         openHome();
                 }
                 return true;
@@ -88,6 +92,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(PlayManuallyActivity.this, "You clicked the back icon", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Back button clicked");
+                playClickSound();
                 openHome();
             }
         });
@@ -97,6 +102,8 @@ public class PlayManuallyActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(PlayManuallyActivity.this, "You clicked the settings icon", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Settings button clicked");
+                playClickSound();
+                stopMusic();
             }
         });
 
@@ -112,11 +119,13 @@ public class PlayManuallyActivity extends AppCompatActivity {
                     Toast.makeText(PlayManuallyActivity.this, "Show Walls: ON", Toast.LENGTH_SHORT).show();
                     Log.v(TAG, "Show Walls toggled: ON");
                     activityOrganizer.userInput(Constants.UserInput.SHOWWALLS);
+                    playClickSound();
                 } else {
                     // Toggle is OFF
                     Toast.makeText(PlayManuallyActivity.this, "Show Walls: OFF", Toast.LENGTH_SHORT).show();
                     Log.v(TAG, "Show Walls toggled: OFF");
                     activityOrganizer.userInput(Constants.UserInput.SHOWWALLS);
+                    playClickSound();
                 }
             }
         });
@@ -132,11 +141,13 @@ public class PlayManuallyActivity extends AppCompatActivity {
                     Toast.makeText(PlayManuallyActivity.this, "Show Maze: ON", Toast.LENGTH_SHORT).show();
                     Log.v(TAG, "Show Maze toggled: ON");
                     activityOrganizer.userInput(Constants.UserInput.SHOWFULLMAZE);
+                    playClickSound();
                 } else {
                     // Toggle is OFF
                     Toast.makeText(PlayManuallyActivity.this, "Show Maze: OFF", Toast.LENGTH_SHORT).show();
                     Log.v(TAG, "Show Maze toggled: OFF");
                     activityOrganizer.userInput(Constants.UserInput.SHOWFULLMAZE);
+                    playClickSound();
                 }
             }
         });
@@ -152,11 +163,13 @@ public class PlayManuallyActivity extends AppCompatActivity {
                     Toast.makeText(PlayManuallyActivity.this, "Show Solution: ON", Toast.LENGTH_SHORT).show();
                     Log.v(TAG, "Show Solution toggled: ON");
                     activityOrganizer.userInput(Constants.UserInput.SHOWSOLUTION);
+                    playClickSound();
                 } else {
                     // Toggle is OFF
                     Toast.makeText(PlayManuallyActivity.this, "Show Solution: OFF", Toast.LENGTH_SHORT).show();
                     Log.v(TAG, "Show Solution toggled: ON");
                     activityOrganizer.userInput(Constants.UserInput.SHOWSOLUTION);
+                    playClickSound();
                 }
             }
         });
@@ -169,6 +182,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
                 Toast.makeText(PlayManuallyActivity.this, "You clicked ZOOM IN", Toast.LENGTH_SHORT).show();;
                 Log.v(TAG, "Zoom in button is clicked");
                 activityOrganizer.userInput(Constants.UserInput.ZOOMIN);
+                playClickSound();
             }
         });
 
@@ -179,6 +193,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
                 Toast.makeText(PlayManuallyActivity.this, "You clicked ZOOM OUT", Toast.LENGTH_SHORT).show();;
                 Log.v(TAG, "Zoom out button is clicked");
                 activityOrganizer.userInput(Constants.UserInput.ZOOMOUT);
+                playClickSound();
             }
         });
 
@@ -198,6 +213,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
                 Toast.makeText(PlayManuallyActivity.this, "You clicked the left arrow", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Left arrow button is clicked");
                 activityOrganizer.userInput(Constants.UserInput.LEFT);
+                playStepSound();
                 path_length += 1;
             }
         });
@@ -208,6 +224,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
                 Toast.makeText(PlayManuallyActivity.this, "You clicked the right arrow", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Right arrow button is clicked");
                 activityOrganizer.userInput(Constants.UserInput.RIGHT);
+                playStepSound();
                 path_length += 1;
             }
         });
@@ -217,6 +234,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
                 Toast.makeText(PlayManuallyActivity.this, "You clicked the up arrow", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Up arrow button is clicked");
                 activityOrganizer.userInput(Constants.UserInput.UP);
+                playStepSound();
                 path_length += 1;
             }
         });
@@ -226,6 +244,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
                 Toast.makeText(PlayManuallyActivity.this, "You clicked jump", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Jump button is clicked");
                 activityOrganizer.userInput(Constants.UserInput.JUMP);
+                playStepSound();
                 path_length += 1;
             }
         });
@@ -236,6 +255,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
     public void openHome() {
         Intent homeIntent = new Intent(this, AMazeActivity.class);
         startActivity(homeIntent);
+        stopMusic();
         finish();
     }
 
@@ -245,6 +265,7 @@ public class PlayManuallyActivity extends AppCompatActivity {
         winningIntent.putExtra(EXTRA_PATH_LENGTH, path_length);
         winningIntent.putExtra(EXTRA_SHORTEST_PATH, shortest_path);
         Log.v(TAG, "Shortest Path: " + shortest_path + ", Path Length: " + path_length);
+        stopMusic();
         startActivity(winningIntent);
         finish();
     }
@@ -253,12 +274,35 @@ public class PlayManuallyActivity extends AppCompatActivity {
         losingIntent.putExtra(EXTRA_PATH_LENGTH, path_length);
         losingIntent.putExtra(EXTRA_SHORTEST_PATH, shortest_path);
         losingIntent.putExtra(EXTRA_MESSAGE, outOfBounds_message);
+        stopMusic();
         startActivity(losingIntent);
         finish();
     }
 
     public int getPathLength(){
+
         return path_length;
+    }
+
+    private void playMusic(){
+        music = MediaPlayer.create(getApplicationContext(), R.raw.woodsmusic);
+        music.setLooping(true);
+        music.start();
+
+    }
+    private void stopMusic(){
+        music.setLooping(false);
+        music.pause();
+        music.stop();
+        music.release();
+    }
+    private void playStepSound(){
+        MediaPlayer step = MediaPlayer.create(getApplicationContext(), R.raw.step);
+        step.start();
+    }
+    private void playClickSound(){
+        MediaPlayer click = MediaPlayer.create(getApplicationContext(), R.raw.clicksound);
+        click.start();
     }
 
 

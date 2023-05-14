@@ -1,6 +1,7 @@
 package com.example.amazebydennistang.gui;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -32,6 +33,7 @@ public class LosingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.losingactivity);
+        playLosingSound();
 
 
         // Parameters passed from PlayAnimation to LosingActivity
@@ -70,6 +72,7 @@ public class LosingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(LosingActivity.this, "You clicked the back icon", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Back button is clicked.");
+                playClickSound();
                 openHome();
             }
         });
@@ -78,6 +81,7 @@ public class LosingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(LosingActivity.this, "You clicked the settings icon", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Settings button is clicked.");
+                playClickSound();
             }
         });
 
@@ -96,6 +100,7 @@ public class LosingActivity extends AppCompatActivity {
                     case R.id.home:
                         Toast.makeText(LosingActivity.this, "Home", Toast.LENGTH_SHORT).show();
                         Log.v(TAG, "Home button is clicked.");
+                        playClickSound();
                         openHome();
                 }
 
@@ -111,6 +116,7 @@ public class LosingActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(LosingActivity.this, "Play Again", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Play Again button is clicked.");
+                playClickSound();
                 openHome();
             }
         });
@@ -120,5 +126,15 @@ public class LosingActivity extends AppCompatActivity {
     public void openHome() {
         Intent homeIntent = new Intent(this, AMazeActivity.class);
         startActivity(homeIntent);
+        finish();
+    }
+
+    private void playLosingSound(){
+        MediaPlayer click = MediaPlayer.create(getApplicationContext(), R.raw.losing_sound);
+        click.start();
+    }
+    private void playClickSound(){
+        MediaPlayer click = MediaPlayer.create(getApplicationContext(), R.raw.clicksound);
+        click.start();
     }
 }

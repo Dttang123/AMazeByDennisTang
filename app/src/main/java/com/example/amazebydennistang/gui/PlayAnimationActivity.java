@@ -1,6 +1,7 @@
 package com.example.amazebydennistang.gui;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -44,6 +45,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
     boolean isHomeButtonClicked = false;
     boolean isLosingButtonClicked = false;
     boolean isWinningButtonClicked = false;
+    private MediaPlayer music;
     MazePanel panel;
     PlayingActivityOrganizer activityOrganizer;
     String noEnergy_message = "Your robot ran out of energy!";
@@ -68,6 +70,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playanimationactivity);
+        playMusic();
 
         //To test that maze shows up
         panel = findViewById(R.id.mazePanel);
@@ -96,6 +99,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
                         Toast.makeText(PlayAnimationActivity.this, "Home", Toast.LENGTH_SHORT).show();
                         Log.v(TAG, "Home button clicked");
                         isHomeButtonClicked = true;
+                        playClickSound();
                         openHome();
                 }
 
@@ -115,6 +119,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
                 Toast.makeText(PlayAnimationActivity.this, "You clicked the back icon", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Back button clicked");
                 isBackClicked = true;
+                playClickSound();
                 openHome();
             }
         });
@@ -123,6 +128,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(PlayAnimationActivity.this, "You clicked the settings icon", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Settings button clicked");
+                playClickSound();
             }
         });
 
@@ -136,6 +142,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
                 Toast.makeText(PlayAnimationActivity.this, "You clicked ZOOM IN", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Zoom in button clicked");
                 activityOrganizer.userInput(Constants.UserInput.ZOOMIN);
+                playClickSound();
             }
         });
 
@@ -146,6 +153,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
                 Toast.makeText(PlayAnimationActivity.this, "You clicked ZOOM OUT", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Zoom out button clicked");
                 activityOrganizer.userInput(Constants.UserInput.ZOOMOUT);
+                playClickSound();
             }
         });
 
@@ -159,10 +167,12 @@ public class PlayAnimationActivity extends AppCompatActivity {
                     // Toggle is ON
                     Toast.makeText(PlayAnimationActivity.this, "Robot is paused", Toast.LENGTH_SHORT).show();
                     Log.v(TAG, "Robot toggled to PAUSED");
+                    playClickSound();
                 } else {
                     // Toggle is OFF
                     Toast.makeText(PlayAnimationActivity.this, "Robot is un-paused", Toast.LENGTH_SHORT).show();
                     Log.v(TAG, "Robot toggled to START");
+                    playClickSound();
                 }
             }
         });
@@ -180,6 +190,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
                     activityOrganizer.userInput(Constants.UserInput.SHOWWALLS);
                     activityOrganizer.userInput(Constants.UserInput.SHOWFULLMAZE);
                     activityOrganizer.userInput(Constants.UserInput.SHOWSOLUTION);
+                    playClickSound();
                 } else {
                     // Toggle is OFF
                     Toast.makeText(PlayAnimationActivity.this, "Show Completed Maze: OFF", Toast.LENGTH_SHORT).show();
@@ -187,6 +198,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
                     activityOrganizer.userInput(Constants.UserInput.SHOWWALLS);
                     activityOrganizer.userInput(Constants.UserInput.SHOWFULLMAZE);
                     activityOrganizer.userInput(Constants.UserInput.SHOWSOLUTION);
+                    playClickSound();
                 }
             }
         });
@@ -231,6 +243,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
                 isWinningButtonClicked = true;
                 Toast.makeText(PlayAnimationActivity.this, "Go2Winning Button Clicked!", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Go2Winning is clicked.");
+                playClickSound();
                 openWinning();
             }
         });
@@ -244,6 +257,7 @@ public class PlayAnimationActivity extends AppCompatActivity {
                 isLosingButtonClicked = true;
                 Toast.makeText(PlayAnimationActivity.this, "Go2Losing Button Clicked!", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Go2Losing button is clicked.");
+                playClickSound();
                 openLosing();
             }
         });
@@ -293,6 +307,8 @@ public class PlayAnimationActivity extends AppCompatActivity {
     public void openHome() {
         Intent homeIntent= new Intent(this, AMazeActivity.class);
         startActivity(homeIntent);
+        stopMusic();
+        finish();
     }
 
     //Goes to winning screen with required parameters for display
@@ -302,7 +318,9 @@ public class PlayAnimationActivity extends AppCompatActivity {
         winningIntent.putExtra(EXTRA_SHORTEST_PATH, shortest_path);
         winningIntent.putExtra(EXTRA_PATH_LENGTH, path_length);
         Log.v(TAG, "Energy Consumed: " + (3500-EnergyRemaining) + ",  Shortest Path: " + shortest_path + ", Path Length: " + path_length);
+        stopMusic();
         startActivity(winningIntent);
+        finish();
     }
     public void openLosing() {
         //Goes to losing screen with required parameters for display
@@ -313,7 +331,9 @@ public class PlayAnimationActivity extends AppCompatActivity {
             losingIntent.putExtra(EXTRA_SHORTEST_PATH, shortest_path);
             losingIntent.putExtra(EXTRA_MESSAGE, noEnergy_message);
             Log.v(TAG, "Energy Consumed: " + (3500-EnergyRemaining) + ",  Shortest Path: " + shortest_path + ", Losing Message: " + noEnergy_message);
+            stopMusic();
             startActivity(losingIntent);
+            finish();
         }
 
         //Robot Crashed, displays different message
@@ -323,8 +343,27 @@ public class PlayAnimationActivity extends AppCompatActivity {
             losingIntent.putExtra(EXTRA_SHORTEST_PATH, shortest_path);
             losingIntent.putExtra(EXTRA_MESSAGE, crash_message);
             Log.v(TAG, "Energy Consumed: " + (3500-EnergyRemaining) + ",  Shortest Path: " + shortest_path + ", Losing Message: " + crash_message);
+            stopMusic();
             startActivity(losingIntent);
+            finish();
         }
 
+    }
+    private void playMusic(){
+        music = MediaPlayer.create(getApplicationContext(), R.raw.woodsmusic);
+        music.setLooping(true);
+        music.start();
+
+    }
+    private void stopMusic(){
+        music.stop();
+    }
+    private void playStepSound(){
+        MediaPlayer step = MediaPlayer.create(getApplicationContext(), R.raw.step);
+        step.start();
+    }
+    private void playClickSound(){
+        MediaPlayer click = MediaPlayer.create(getApplicationContext(), R.raw.clicksound);
+        click.start();
     }
 }

@@ -2,6 +2,7 @@ package com.example.amazebydennistang.gui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -49,6 +50,7 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
     private int skill_level;
     private String generation;
     private String rooms;
+    private MediaPlayer music;
     private Thread mazeGenerationThread;
 
     private String EXTRA_SEED = "com.example.mazewidgetpractice.EXTRA_SEED";
@@ -71,6 +73,7 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.generating);
+        playMusic();
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -98,6 +101,7 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
 
                 switch (item.getItemId()) { //Possibly add more options later
                     case R.id.home:
+                        playClickSound();
                         Toast.makeText(GeneratingActivity.this, "Home", Toast.LENGTH_SHORT).show();
                         Log.v(TAG, "Home button is clicked.");
                         openHome();
@@ -115,6 +119,7 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
         leftIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                playClickSound();
                 Toast.makeText(GeneratingActivity.this, "You clicked the back icon", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Back button is clicked.");
                 openHome();
@@ -123,6 +128,7 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
         rightIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                playClickSound();
                 Toast.makeText(GeneratingActivity.this, "You clicked the settings icon", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Settings button is clicked.");
             }
@@ -136,6 +142,7 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 //on selecting a spinner item, set driverSelection to that item
                 driverSelection = adapterView.getItemAtPosition(position).toString();
+                playClickSound();
 
                 if (adapterView.getItemAtPosition(position).equals("Select")) {
                     Toast.makeText(GeneratingActivity.this, "Please select a driver", Toast.LENGTH_SHORT).show();
@@ -216,6 +223,7 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
 
                 qualitySelection = adapterView.getItemAtPosition(position).toString();
+                playClickSound();
                 Toast.makeText(GeneratingActivity.this, "Selected Item: " + qualitySelection, Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "User selected " + qualitySelection + " robot quality.");
             }
@@ -263,6 +271,8 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
                 textGrowing.setText("Growing Trees... " + progress + "%");
                 if (progress == 100) {
                     goToPlaying();
+                    //FOR TESTING
+                    //openPlayManuallyActivity();
                 }
                 else if (driverSelection.equals("Select")) {
                     runOnUiThread(new Runnable() {
@@ -283,6 +293,7 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
 
     public void openHome() {
         Intent homeIntent = new Intent(this, AMazeActivity.class);
+        stopMusic();
         startActivity(homeIntent);
     }
 
@@ -292,6 +303,7 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
         animationIntent.putExtra(EXTRA_DRIVER, driverSelection);
         animationIntent.putExtra(EXTRA_ROBOTQUALITY, qualitySelection);
         Log.v(TAG, "Driver: " + driverSelection + ",  Robot Quality: " + qualitySelection);
+        stopMusic();
         startActivity(animationIntent);
         finish();
     }
@@ -300,6 +312,7 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
         Intent manualIntent = new Intent(GeneratingActivity.this, PlayManuallyActivity.class);
         manualIntent.putExtra(EXTRA_DRIVER, driverSelection);
         Log.v(TAG, "Driver: " + driverSelection);
+        stopMusic();
         startActivity(manualIntent);
         finish();
     }
@@ -369,13 +382,27 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
         if (driverSelection.equals("Manual")) {
             Log.i("Passed!", "Passed!");
             openPlayManuallyActivity();
+            //stopMusic();
             finish();
         } else {
             Log.i("Failed!", "Failed!");
             openPlayAnimationActivity();
+            //stopMusic();
             finish();
         }
 
+    }
+    private void playMusic(){
+        music = MediaPlayer.create(getApplicationContext(), R.raw.generating_music);
+        music.start();
+        music.isLooping();
+    }
+    private void stopMusic(){
+        music.stop();
+    }
+    private void playClickSound(){
+        MediaPlayer click = MediaPlayer.create(getApplicationContext(), R.raw.clicksound);
+        click.start();
     }
 
 }

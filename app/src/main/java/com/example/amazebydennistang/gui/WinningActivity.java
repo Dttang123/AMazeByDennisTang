@@ -1,6 +1,7 @@
 package com.example.amazebydennistang.gui;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -32,6 +33,7 @@ public class WinningActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.winningactivity);
+        playWinningSound();
 
         intent = getIntent();
 
@@ -77,6 +79,7 @@ public class WinningActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(WinningActivity.this, "You clicked the back icon", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Back button is clicked");
+                playClickSound();
                 openHome();
             }
         });
@@ -85,6 +88,7 @@ public class WinningActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(WinningActivity.this, "You clicked in settings icon", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Settings button is clicked");
+                playClickSound();
             }
         });
 
@@ -103,6 +107,7 @@ public class WinningActivity extends AppCompatActivity {
                     case R.id.home:
                         Toast.makeText(WinningActivity.this, "Home", Toast.LENGTH_SHORT).show();
                         Log.v(TAG, "Home button is clicked");
+                        playClickSound();
                         openHome();
                 }
                 return true;
@@ -118,15 +123,25 @@ public class WinningActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(WinningActivity.this, "Play Again", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Play Again Button is clicked");
+                playClickSound();
                 openHome();
             }
         });
-
-
 
     }
     public void openHome() {
         Intent homeIntent = new Intent(this, AMazeActivity.class);
         startActivity(homeIntent);
+
+        finish();
+    }
+
+    private void playWinningSound(){
+        MediaPlayer click = MediaPlayer.create(getApplicationContext(), R.raw.escaped_sound);
+        click.start();
+    }
+    private void playClickSound(){
+        MediaPlayer click = MediaPlayer.create(getApplicationContext(), R.raw.clicksound);
+        click.start();
     }
 }
