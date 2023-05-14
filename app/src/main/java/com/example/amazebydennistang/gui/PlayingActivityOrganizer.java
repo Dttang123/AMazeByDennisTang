@@ -123,13 +123,18 @@ public class PlayingActivityOrganizer {
     public boolean userInput(Constants.UserInput userInput) {
         switch (userInput) {
             case UP: // move forward
-                robot.move(1);
-                walk(1);
-                //Checks if you left the maze
-                if(!maze.isValidPosition(px,py)) {
-                    if (manual) {
-                        manuallyActivity.openWinning(manuallyActivity.getPathLength(), shortestPossibleSteps);
+                if(manual == true){
+                    walk(1);
+                    //Checks if you left the maze
+                    if(!maze.isValidPosition(px,py)) {
+                        if (manual) {
+                            manuallyActivity.openWinning(manuallyActivity.getPathLength(), shortestPossibleSteps);
+                        }
+
                     }
+                }
+                else{
+                    robot.move(1);
                 }
                 break;
             case LEFT: // turn left
