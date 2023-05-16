@@ -26,10 +26,11 @@ public class Constants {
 	public static final int[] SKILL_PARTCT = { 60, 600, 900, 1200, 2100, 2700, 3300,
 	5000, 6000, 13500, 19800, 25000, 29000, 45000, 85000, 85000*4 };
 	public static final int MAX_SKILL_LEVEL = 15;
-		
+
 	// Possible user input  
-	public enum UserInput {RETURNTOTITLE, START, UP, LEFT, RIGHT, JUMP, SHOWWALLS, SHOWFULLMAZE, SHOWSOLUTION, ZOOMIN, ZOOMOUT }
-	//public enum
+	public enum UserInput {RETURNTOTITLE, START, UP, LEFT, RIGHT, JUMP, SHOWWALLS, SHOWFULLMAZE, SHOWSOLUTION, ZOOMIN, ZOOMOUT}
+	// Possible storage values for Maze
+	public static final String PREFERENCES = "Pref";
 
 	// fixing a value matching the escape key
 	public static final int ESCAPE = 27;
