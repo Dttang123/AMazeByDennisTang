@@ -254,8 +254,8 @@ public class PlayManuallyActivity extends AppCompatActivity {
     //Creates intent to return to title screen
     public void openHome() {
         Intent homeIntent = new Intent(this, AMazeActivity.class);
-        startActivity(homeIntent);
         stopMusic();
+        startActivity(homeIntent);
         finish();
     }
 

@@ -1,5 +1,6 @@
 package com.example.amazebydennistang.gui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
@@ -48,10 +49,12 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
     private String qualitySelection;
     private int seed;
     private int skill_level;
-    private String generation;
+    private String generation_selection;
     private String rooms;
     private MediaPlayer music;
-    private Thread mazeGenerationThread;
+
+    private Builder generatorChoice;
+    private boolean revisited;
 
     private String EXTRA_SEED = "com.example.mazewidgetpractice.EXTRA_SEED";
     private String EXTRA_SKILL_LEVEL = "com.example.mazewidgetpractice.EXTRA_SKILL_LEVEL";
@@ -59,9 +62,9 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
     private String EXTRA_GENERATION = "com.example.mazewidgetpractice.EXTRA_GENERATION";
     private String EXTRA_DRIVER = "com.example.mazewidgetpractice.EXTRA_DRIVER";
     private String EXTRA_ROBOTQUALITY = "com.example.mazewidgetpractice.EXTRA_ROBOT";
-    private static final String TAG = "Generating: ";
-
+    String EXTRA_REVISIT = "com.example.mazewidgetpractice.EXTRA_REVISIT" ;
     final Handler mHandler = new Handler();
+    private static final String TAG = "Generating: ";
 
     //Maze Variables
     SharedPreferences sharedPreferences;
@@ -69,6 +72,9 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
     private MazeFactory mazeFactory;
     private Maze maze;
 
+    private void initSeed(String seedString){
+        this.seed = Integer.decode(seedString);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,15 +85,28 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
         Bundle bundle = intent.getExtras();
         mazeFactory = new MazeFactory();
 
-        //Retrieves passed parameters from AMazeActivity into Generating, used later in P7
         if (bundle != null) {
+            //Retrieves passed parameters from AMazeActivity into Generating
+            decodeIfRegenerating(intent.getStringExtra(EXTRA_REVISIT));
             seed = intent.getIntExtra(EXTRA_SEED, 0);
             skill_level = intent.getIntExtra(EXTRA_SKILL_LEVEL, 0);
             rooms = intent.getStringExtra(EXTRA_ROOMS);
-            generation = intent.getStringExtra(EXTRA_GENERATION);
-            Log.v(TAG, "Seed: " + seed + ",  Skill Level: " + skill_level + ",  Generator: " + generation + ",  Rooms: " + rooms);
-        }
+            generation_selection = intent.getStringExtra(EXTRA_GENERATION);
+            decodeGenerator(generation_selection);
 
+            initSeed(intent.getStringExtra(EXTRA_SEED));
+            sharedPreferences = getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE);
+
+            //For Testing
+            String revisited_message;
+            if(revisited == true) {
+                revisited_message = "true";
+            }
+            else{
+                revisited_message = "false";
+            }
+            Log.v(TAG, "Seed: " + seed + ",  Skill Level: " + skill_level + ",  Generator: " + generation_selection + ",  Rooms: " + rooms + ", Revisited: " + revisited_message);
+        }
 
         //FOR BOTTOM HOME BAR
         nav = findViewById(R.id.bottomNavigationView);
@@ -249,7 +268,6 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
     }
 
     //FOR THE PROGRESS BAR
-    //setProgress();
 
     /**
      * Draws the current state of maze generation progress onto the screen
@@ -278,15 +296,11 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
                     runOnUiThread(new Runnable() {
                         public void run() {
                             Toast.makeText(GeneratingActivity.this, "Generation is complete. Choose a driver to begin the maze.", Toast.LENGTH_LONG).show();
-                            Log.v(TAG, "Loading is finished, waiting for user to choose a driver");
                         }
                     });
                 }
             }
         });
-
-
-            //Uses the "runOnUiThread()" method, to run a Runnable on the main UI thread and display the toast message.
 
     }
 
@@ -318,9 +332,6 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
     }
 
 
-    /**
-     * Starts the maze generation
-     */
     @Override
     public void updateProgress(int percentage) {
         updateProgressBar(percentage);
@@ -333,12 +344,12 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
 
     @Override
     public Builder getBuilder() {
-        return builderStringToBuilder(generation);
+        return builderStringToBuilder(generation_selection);
     }
 
     @Override
     public boolean isPerfect() {
-        return false;
+        return revisited;
     }
 
     @Override
@@ -347,22 +358,21 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
     }
 
     @Override
-    public void deliver(Maze mazeConfig) {
-        if(mazeConfig == null){
-            Log.v(TAG, "Maze is null, something is wrong");
+    public void deliver(Maze maze) {
+        if(!this.isPerfect()) {
+            this.storeMazeSettings(generation_selection, this.seed, skill_level);
         }
-        else{
-            Log.v(TAG, "Maze is not null, you're fine");
-            DataHolder.setMaze(mazeConfig);
+        Log.v(TAG, "Maze is not null, you're fine");
+        DataHolder.setMaze(maze);
+
         }
-    }
 
     private void start() {
         mazeFactory.order(this);
     }
 
     /**
-     * Converts the string representation to a Builder
+     * Converts the chosen string representation of generation_selection into a Builder
      */
     public Builder builderStringToBuilder(String builderString) {
         switch (builderString) {
@@ -370,7 +380,7 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
                 return Builder.DFS;
             case "Prim":
                 return Builder.Prim;
-            case "Boruvka":
+            case "Boruvka's":
                 return Builder.Boruvka;
         }
 
@@ -380,14 +390,10 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
     private void goToPlaying() {
         Log.i("Final driver: ", driverSelection);
         if (driverSelection.equals("Manual")) {
-            Log.i("Passed!", "Passed!");
             openPlayManuallyActivity();
-            //stopMusic();
             finish();
         } else {
-            Log.i("Failed!", "Failed!");
             openPlayAnimationActivity();
-            //stopMusic();
             finish();
         }
 
@@ -403,6 +409,84 @@ public class GeneratingActivity extends AppCompatActivity implements Order {
     private void playClickSound(){
         MediaPlayer click = MediaPlayer.create(getApplicationContext(), R.raw.clicksound);
         click.start();
+    }
+
+    /**
+     * Stores the seed and settings to generate the maze
+     */
+    private void storeMazeSettings(String generator, int seed, int skill_level){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(findSeedKey(generation_selection, skill_level), String.valueOf(seed));
+        editor.commit();
+    }
+
+    /**
+     * This method searches through the "keys" String array to find the
+     * key that corresponds to the inputted parameters.
+     */
+    public static String findSeedKey(String generator, int skill_level)
+    {
+        int generatorNum = generatorStringToInt(generator);
+        return AMazeActivity.keys[generatorNum][skill_level];
+
+    }
+
+    /**
+     * This method converts a string representation of a generator into its corresponding integer value.
+     * The integer value is then used to find a key using a combination of the generator's value representation
+     * and a difficulty level.
+     */
+    public static int generatorStringToInt(String generator){
+        int gen = -1;
+
+        switch (generator)
+        {
+            case "DFS":
+                gen = 0;
+                break;
+            case "Prim":
+                gen = 1;
+                break;
+            case "Boruvka's":
+                gen = 2;
+                break;
+        }
+        return gen;
+    }
+
+    /**
+     * This method takes a string parameter representing the chosen generator and converts it into a Builder object.
+     * @param generator The string representation of the chosen generator.
+     */
+    private void decodeGenerator(String generator)
+    {
+        switch (generator){
+            case "DFS" :
+                generatorChoice = Builder.DFS;
+                break;
+            case "Prim" :
+                generatorChoice = Builder.Prim;
+                break;
+            case "Boruvka's" :
+                generatorChoice = Builder.Boruvka;
+                break;
+        }
+    }
+
+    /**
+     * This method takes a string parameter that indicates whether the maze is being regenerated
+     * or if a completely new maze is being generated.
+     */
+    private void decodeIfRegenerating(String condition){
+        switch(condition){
+            case "true":
+                revisited = true;
+                break;
+            case "false":
+                revisited = false;
+                break;
+        }
+
     }
 
 }

@@ -307,8 +307,8 @@ public class PlayAnimationActivity extends AppCompatActivity {
     //Opens goes back to title screen
     public void openHome() {
         Intent homeIntent= new Intent(this, AMazeActivity.class);
-        startActivity(homeIntent);
         stopMusic();
+        startActivity(homeIntent);
         finish();
     }
 
